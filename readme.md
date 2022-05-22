@@ -1,1 +1,1 @@
-otus JS-Basic learning account
+Otus JS-Basic learning account
