@@ -1,0 +1,54 @@
+:root {
+  font-size: 16px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  background-color: white;
+  color: black;
+  line-height: 1.2;
+}
+
+.cbxDiv {
+  position: relative;
+  left: 0;
+  right: 0;
+  margin: auto;
+  display: block;
+  text-align: center;
+}
+
+.infoDiv {
+  height: 600px;
+  border: solid 1px black;
+  width: 50%;
+  display: block;
+  float: left;
+  padding: 5px;
+}
+
+.btns {
+  width: 100px;
+  height: 25px;
+  display: none;
+  left: 0;
+  right: 0;
+  margin: auto;
+  margin-top: 5px;
+}
+
+.edits {
+  width: 100px;
+  height: 25px;
+  display: block;
+  left: 0;
+  right: 0;
+  margin: auto;
+  margin-top: 5px;
+}

@@ -4,7 +4,7 @@
   "description": "otus JS-Basic learning account",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --silent=false",
     "lint": "prettier --check . && eslint .",
     "lint-fix": "prettier --write . && eslint . --fix",
     "prepare": "husky install"
