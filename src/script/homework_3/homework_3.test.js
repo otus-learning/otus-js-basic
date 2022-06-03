@@ -1,7 +1,10 @@
 import { hw3_f1, hw3_f2, hw3_f3 } from "./homework_3.js";
 
 describe("homework 3, function 1 test", () => {
-  console.log = jest.fn();
+  beforeEach(() => {
+    console.log = jest.fn();
+  });
+
   it("is function exists", () => {
     expect(hw3_f1).toBeDefined();
   });
@@ -18,7 +21,9 @@ describe("homework 3, function 1 test", () => {
 });
 
 describe("homework 3, function 2 test", () => {
-  console.log = jest.fn();
+  beforeEach(() => {
+    console.log = jest.fn();
+  });
   it("is function exists", () => {
     expect(hw3_f2).toBeDefined();
   });
@@ -40,7 +45,9 @@ describe("homework 3, function 2 test", () => {
 });
 
 describe("homework 3, function 3 test", () => {
-  console.log = jest.fn();
+  beforeEach(() => {
+    console.log = jest.fn();
+  });
   it("prompted 3", () => {
     jest.spyOn(window, "prompt").mockImplementation(() => "3");
     hw3_f3();

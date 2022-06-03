@@ -1,7 +1,10 @@
 import { hw9_f1, hw9_f2, hw9_f3 } from "./homework_9.js";
 
 describe("homework 9, function 1 test", () => {
-  console.log = jest.fn();
+  beforeEach(() => {
+    console.log = jest.fn();
+  });
+
   it("is function exists", () => {
     expect(hw9_f1).toBeDefined();
   });
@@ -50,7 +53,9 @@ describe("homework 9, function 1 test", () => {
 });
 
 describe("homework 8, function 2 test", () => {
-  console.log = jest.fn();
+  beforeEach(() => {
+    console.log = jest.fn();
+  });
 
   it("is function exists", () => {
     expect(hw9_f2).toBeDefined();
@@ -82,7 +87,10 @@ describe("homework 8, function 2 test", () => {
 });
 
 describe("homework 8, function 3 test", () => {
-  console.log = jest.fn();
+  beforeEach(() => {
+    console.log = jest.fn();
+  });
+
   let promptIdx;
   beforeEach(() => {
     promptIdx = 0;

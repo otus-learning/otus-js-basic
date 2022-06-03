@@ -1,7 +1,9 @@
 import { hw8_f1, hw8_f2, hw8_f3 } from "./homework_8.js";
 
 describe("homework 8, function 1 test", () => {
-  console.log = jest.fn();
+  beforeEach(() => {
+    console.log = jest.fn();
+  });
 
   it("is function exists", () => {
     expect(hw8_f1).toBeDefined();
@@ -26,7 +28,10 @@ describe("homework 8, function 1 test", () => {
 });
 
 describe("homework 8, function 2 test", () => {
-  console.log = jest.fn();
+  beforeEach(() => {
+    console.log = jest.fn();
+  });
+
   it("is function exists", () => {
     expect(hw8_f2).toBeDefined();
   });
@@ -49,7 +54,9 @@ describe("homework 8, function 2 test", () => {
 });
 
 describe("homework 8, function 3 test", () => {
-  console.log = jest.fn();
+  beforeEach(() => {
+    console.log = jest.fn();
+  });
 
   it("is function exists", () => {
     expect(hw8_f3).toBeDefined();

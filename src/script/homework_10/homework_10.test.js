@@ -1,7 +1,9 @@
 import { hw10_f1 } from "./homework_10.js";
 
 describe("homework 10, function 1 test", () => {
-  console.log = jest.fn();
+  beforeEach(() => {
+    console.log = jest.fn();
+  });
 
   it("is function exists", () => {
     expect(hw10_f1).toBeDefined();
