@@ -1,9 +1,6 @@
-import {
-  functions,
-  TASK7_BTN_CLASS_NAME,
-  TASK7_EDIT_CLASS_NAME,
-  TASK7_MAIN_CONTAINER_ID,
-} from "./const.js";
+const TASK7_MAIN_CONTAINER_ID = "task7id";
+const TASK7_BTN_CLASS_NAME = "btns";
+const TASK7_EDIT_CLASS_NAME = "edits";
 
 export let hw7_f1 = (mainContainer) => {
   let task7Div = document.getElementById(TASK7_MAIN_CONTAINER_ID);
@@ -50,10 +47,4 @@ export let hw7_f1 = (mainContainer) => {
   }
 
   mainContainer.appendChild(task7Div);
-  return ["All need elements are created"];
 };
-functions.push({
-  name: "Homework 7 task #1",
-  func: hw7_f1,
-  params: [document.body],
-});

@@ -64,4 +64,10 @@ describe("homework 7, function 1 test", () => {
     btn.click();
     expect(container.querySelectorAll("p")).toHaveLength(5);
   });
+
+  it("check inputs creation in component full of childs", () => {
+    hw7_f1(container);
+    expect(container.querySelectorAll("input")).toHaveLength(2);
+    expect(container.querySelectorAll("p")).toHaveLength(3);
+  });
 });

@@ -1,6 +1,7 @@
 import { hw3_f1, hw3_f2, hw3_f3 } from "./homework_3.js";
 
 describe("homework 3, function 1 test", () => {
+  console.log = jest.fn();
   it("is function exists", () => {
     expect(hw3_f1).toBeDefined();
   });
@@ -10,11 +11,14 @@ describe("homework 3, function 1 test", () => {
     for (let i = 100; i >= 50; i--) {
       sum += i;
     }
-    expect(hw3_f1()).toEqual([sum]);
+    hw3_f1();
+    expect(console.log).toHaveBeenCalledTimes(1);
+    expect(console.log).toBeCalledWith(sum);
   });
 });
 
 describe("homework 3, function 2 test", () => {
+  console.log = jest.fn();
   it("is function exists", () => {
     expect(hw3_f2).toBeDefined();
   });
@@ -24,45 +28,37 @@ describe("homework 3, function 2 test", () => {
     for (let i = 1; i < 10; i++) {
       check.push(i * 7);
     }
-    let rslt = hw3_f2()
-      .join("")
-      .split("<br>")
-      .map((el) => {
-        return Number(el.split("=").pop().trim());
-      })
-      .slice(1);
-    expect(check).toEqual(rslt);
+    hw3_f2();
+    for (let i = 0; i < check.length; i++) {
+      expect(console.log).toHaveBeenNthCalledWith(
+        i + 1,
+        `7 x ${i + 1} = ${check[i]}`
+      );
+    }
+    expect(console.log).toHaveBeenCalledTimes(9);
   });
 });
 
 describe("homework 3, function 3 test", () => {
+  console.log = jest.fn();
   it("prompted 3", () => {
     jest.spyOn(window, "prompt").mockImplementation(() => "3");
-    expect(hw3_f3()).toEqual([2]);
+    hw3_f3();
+    expect(console.log).toHaveBeenCalledTimes(1);
+    expect(console.log).toBeCalledWith(2);
   });
 
   it("prompted 9", () => {
     jest.spyOn(window, "prompt").mockImplementation(() => "9");
-    expect(hw3_f3()).toEqual([5]);
+    hw3_f3();
+    expect(console.log).toHaveBeenCalledTimes(1);
+    expect(console.log).toBeCalledWith(5);
   });
 
   it("prompted 0", () => {
     jest.spyOn(window, "prompt").mockImplementation(() => "0");
-    expect(hw3_f3()).toEqual([0]);
-  });
-
-  it("prompted null", () => {
-    jest.spyOn(window, "prompt").mockImplementation(() => "null");
-    expect(hw3_f3()).toEqual([0]);
-  });
-
-  it("prompted undefined", () => {
-    jest.spyOn(window, "prompt").mockImplementation(() => "undefined");
-    expect(hw3_f3()).toEqual([0]);
-  });
-
-  it("prompted empty string", () => {
-    jest.spyOn(window, "prompt").mockImplementation(() => "");
-    expect(hw3_f3()).toEqual([0]);
+    hw3_f3();
+    expect(console.log).toHaveBeenCalledTimes(1);
+    expect(console.log).toBeCalledWith(0);
   });
 });

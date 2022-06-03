@@ -1,4 +1,4 @@
-import { hw4_f1, hw4_f2, hw4_f3 } from "./homework_4.js";
+import { hw4_f1, hw4_f2, hw4_f3, user, admin } from "./homework_4.js";
 
 describe("homework 4, function 1 test", () => {
   jest.spyOn(window, "prompt").mockImplementation(() => "23");
@@ -7,88 +7,82 @@ describe("homework 4, function 1 test", () => {
     expect(hw4_f1).toBeDefined();
   });
 
+  hw4_f1();
+
+  it("is user object exists", () => {
+    expect(user).toBeDefined();
+  });
+
   it("check user object", () => {
-    expect(typeof hw4_f1()[0]).toEqual("object");
+    expect(typeof user).toEqual("object");
   });
 
   it("check user name exists", () => {
-    expect(hw4_f1()[0].name).toBeDefined();
+    expect(user.name).toBeDefined();
   });
 
   it("check user name value", () => {
-    expect(hw4_f1()[0].name).toEqual("John");
+    expect(user.name).toEqual("John");
   });
 
   it("check user age exists", () => {
-    expect(hw4_f1()[0].age).toBeDefined();
+    expect(user.age).toBeDefined();
   });
 
   it("check user age value", () => {
-    expect(hw4_f1()[0].age).toEqual(23);
+    expect(user.age).toEqual("23");
   });
 
   it("check user age modified", () => {
     jest.spyOn(window, "prompt").mockImplementation(() => "21");
-    expect(hw4_f1()[0].age).toEqual(21);
-  });
-
-  it("check user age null prompted", () => {
-    jest.spyOn(window, "prompt").mockImplementation(() => "null");
-    expect(hw4_f1()[0].age).toEqual(0);
-  });
-
-  it("check user age undefined prompted", () => {
-    jest.spyOn(window, "prompt").mockImplementation(() => "undefined");
-    expect(hw4_f1()[0].age).toEqual(0);
-  });
-
-  it("check user age empty string prompted", () => {
-    jest.spyOn(window, "prompt").mockImplementation(() => "");
-    expect(hw4_f1()[0].age).toEqual(0);
+    hw4_f1();
+    expect(user.age).toEqual("21");
   });
 });
 
 describe("homework 3, function 2 test", () => {
-  jest.spyOn(window, "prompt").mockImplementation(() => "23");
-  let user = hw4_f1()[0];
-
   it("is function exists", () => {
     expect(hw4_f2).toBeDefined();
   });
 
+  it("is admin object exists", () => {
+    jest.spyOn(window, "prompt").mockImplementation(() => "23");
+    hw4_f1();
+    hw4_f2();
+    expect(admin).toBeDefined();
+  });
+
   it("check admin object", () => {
-    expect(typeof hw4_f2()[0]).toEqual("object");
+    expect(typeof admin).toEqual("object");
   });
 
   it("check admin name exists", () => {
-    expect(hw4_f2()[0].name).toBeDefined();
+    expect(admin.name).toBeDefined();
   });
 
   it("check that admin name is equal to user name", () => {
-    expect(hw4_f2()[0].name).toEqual(user.name);
+    expect(admin.name).toEqual(user.name);
   });
 
   it("check admin age exists", () => {
-    expect(hw4_f2()[0].age).toBeDefined();
+    expect(admin.age).toBeDefined();
   });
 
   it("check admin age value", () => {
-    expect(hw4_f2()[0].age).toEqual(user.age);
+    expect(admin.age).toEqual(user.age);
   });
 
   it("check admin role exists", () => {
-    expect(hw4_f2()[0].role).toBeDefined();
+    expect(admin.role).toBeDefined();
   });
 
   it("check admin role value", () => {
-    expect(hw4_f2()[0].role).toEqual("admin");
+    expect(admin.role).toEqual("admin");
   });
 });
 
 describe("homework 3, function 3 test", () => {
-  jest.spyOn(window, "prompt").mockImplementation(() => "23");
-
-  let admin = hw4_f2()[0];
+  hw4_f2();
 
   it("is function exists", () => {
     expect(hw4_f3).toBeDefined();
