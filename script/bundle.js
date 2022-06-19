@@ -342,7 +342,7 @@ const GEOCODER_URL_END = "?format=json&addressdetails=1&limit=1&polygon_svg=1";
 const MAP_URL_START = "https://www.openstreetmap.org/export/embed.html?bbox=";
 const MAP_URL_END = "&amp;layer=mapnik";
 const WEATHER_API_KEY = "542ffd081e67f4512b705f89d2a611b2";
-const WEATHER_URL_START = "http://api.openweathermap.org/data/2.5/forecast?lang=ru&units=metric&"; //const WEATHER_URL_START = "http://api.openweathermap.org/data/2.5/weather?lang=ru&units=metric&"
+const WEATHER_URL_START = "https://api.openweathermap.org/data/2.5/forecast?lang=ru&units=metric&"; //const WEATHER_URL_START = "http://api.openweathermap.org/data/2.5/weather?lang=ru&units=metric&"
 
 const WEATHER_URL_END = "&cnt=24&appid=" + WEATHER_API_KEY; //const WEATHER_URL_END = "&appid=" + WEATHER_API_KEY;
 ;// CONCATENATED MODULE: ./src/script/ui.js
