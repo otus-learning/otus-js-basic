@@ -337,7 +337,7 @@ const MY_LOCATION_LON = "myLocationLon";
 const MY_LOCATION_LAT = "myLocationLat";
 const CITY_LIST = "cityList";
 const LS_CAPACITY = 10;
-const GEOCODER_URL_START = "http://nominatim.openstreetmap.org/search/";
+const GEOCODER_URL_START = "https://nominatim.openstreetmap.org/search/";
 const GEOCODER_URL_END = "?format=json&addressdetails=1&limit=1&polygon_svg=1";
 const MAP_URL_START = "https://www.openstreetmap.org/export/embed.html?bbox=";
 const MAP_URL_END = "&amp;layer=mapnik";
