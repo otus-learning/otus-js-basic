@@ -1,0 +1,111 @@
+:root {
+  font-size: 16px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  background-color: #eeddcc;
+  color: black;
+  line-height: 1.2;
+  height: 100vh;
+}
+
+.mainContainer {
+  background-color: #eeddcc;
+}
+
+.cbx {
+  margin-right: 1%;
+  margin-left: 5px;
+}
+
+.btn {
+  width: 80px;
+  margin-left: 1%;
+}
+
+a {
+  display: block;
+}
+
+iframe {
+  width: 64%;
+  height: 300px;
+  margin: 1%;
+  border: 1px solid black;
+  display: inline-block;
+}
+
+.boldP {
+  font-weight: bold;
+}
+
+.nowDiv {
+  line-height: 1.8;
+  text-align: center;
+  background: #eeddcc;
+  width: 330px;
+  border: 1px solid black;
+  flex-shrink: 0;
+  padding: 10px;
+}
+
+.txtDiv {
+  width: 70%;
+  display: inline-block;
+  text-align: right;
+  vertical-align: text-top;
+}
+
+.inlineImg {
+  width: 30%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.flexDiv {
+  margin: 1%;
+  width: auto;
+  display: flex;
+  overflow: auto;
+  justify-content: space-between;
+}
+
+.searchDiv {
+  padding-top: 1%;
+  margin: 1%;
+  text-align: right;
+}
+
+.histDiv {
+  width: 31%;
+  height: 300px;
+  display: inline-block;
+  border: 1px solid black;
+  margin: 1%;
+  text-align: center;
+  vertical-align: top;
+}
+
+.bigBorderDiv {
+  border: 15px solid black;
+  height: auto;
+}
+
+.smallBorderDiv {
+  border: 5px solid black;
+  height: auto;
+}
+
+.forecastEl {
+  padding: 5px;
+  border: 1px solid black;
+  text-align: center;
+  background: #eeddcc;
+}
