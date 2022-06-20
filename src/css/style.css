@@ -10,14 +10,14 @@
 
 html,
 body {
-  background-color: #eeddcc;
+  background-color: #edc;
   color: black;
   line-height: 1.2;
   height: 100vh;
 }
 
-.mainContainer {
-  background-color: #eeddcc;
+.main-container {
+  background-color: #edc;
 }
 
 .cbx {
@@ -42,34 +42,34 @@ iframe {
   display: inline-block;
 }
 
-.boldP {
+.bold-p {
   font-weight: bold;
 }
 
-.nowDiv {
+.now-div {
   line-height: 1.8;
   text-align: center;
-  background: #eeddcc;
+  background: #edc;
   width: 330px;
   border: 1px solid black;
   flex-shrink: 0;
   padding: 10px;
 }
 
-.txtDiv {
+.txt-div {
   width: 70%;
   display: inline-block;
   text-align: right;
   vertical-align: text-top;
 }
 
-.inlineImg {
+.inline-img {
   width: 30%;
   display: inline-block;
   vertical-align: top;
 }
 
-.flexDiv {
+.flex-div {
   margin: 1%;
   width: auto;
   display: flex;
@@ -77,13 +77,13 @@ iframe {
   justify-content: space-between;
 }
 
-.searchDiv {
+.search-div {
   padding-top: 1%;
   margin: 1%;
   text-align: right;
 }
 
-.histDiv {
+.hist-div {
   width: 31%;
   height: 300px;
   display: inline-block;
@@ -93,19 +93,19 @@ iframe {
   vertical-align: top;
 }
 
-.bigBorderDiv {
+.big-border-div {
   border: 15px solid black;
   height: auto;
 }
 
-.smallBorderDiv {
+.small-border-div {
   border: 5px solid black;
   height: auto;
 }
 
-.forecastEl {
+.forecast-el {
   padding: 5px;
   border: 1px solid black;
   text-align: center;
-  background: #eeddcc;
+  background: #edc;
 }

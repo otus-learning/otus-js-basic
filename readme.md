@@ -10,8 +10,12 @@ API used:
 
 [OpenStreetMap Static maps API](https://www.openstreetmap.org)
 
-[OpenStreetMap geocoder API](http://nominatim.openstreetmap.org)
+[OpenStreetMap geocoder API](https://nominatim.openstreetmap.org)
+
+[IP WHOIS](https://ipwho.is)
 
 ## Structure:
 
 The project consists of one file of **ui.js**, with the implementation of the logic and user interface + file of used constants **prjConst.js**. There is also a small files with styles and a webpage template (**style.css**, **index.html**).
+
+![Coverage](./coverage/badges.svg)

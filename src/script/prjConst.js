@@ -29,3 +29,4 @@ export const WEATHER_URL_START =
 //const WEATHER_URL_START = "http://api.openweathermap.org/data/2.5/weather?lang=ru&units=metric&"
 export const WEATHER_URL_END = "&cnt=24&appid=" + WEATHER_API_KEY;
 //const WEATHER_URL_END = "&appid=" + WEATHER_API_KEY;
+export const IP_WHOIS_URL = "https://ipwho.is";

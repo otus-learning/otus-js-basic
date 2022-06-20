@@ -16,10 +16,17 @@ let localStorage = {
 
 Object.defineProperty(window, "localStorage", { value: localStorage });
 
+//navigator pass coordinates to program
+let navPassExecute = 1;
+
 let navigator = {
   geolocation: {
-    getCurrentPosition: (func) => {
-      func({ coords: { latitude: 1, longitude: 2 } });
+    getCurrentPosition: (funcPass, funcErr) => {
+      if (navPassExecute) {
+        funcPass({ coords: { latitude: 1, longitude: 2 } });
+      } else {
+        funcErr();
+      }
     },
   },
 };
@@ -85,6 +92,28 @@ describe("test that geocoder response decoded right", () => {
     };
 
     expect(await ui.getCoordinates(city)).toEqual(city);
+  });
+});
+
+describe("test that some function fetching from ip whois", () => {
+  it("test that function exists", () => {
+    expect(ui.getLocation).toBeDefined();
+  });
+
+  it("test that function getting right url", async () => {
+    window.fetch = (url) => {
+      return new Promise((resolve) => {
+        process.nextTick(() => {
+          resolve({
+            json: () => {
+              return url;
+            },
+          });
+        });
+      });
+    };
+
+    expect(await ui.getLocation()).toEqual(prjConst.IP_WHOIS_URL);
   });
 });
 
@@ -457,5 +486,33 @@ describe("test that events of all elements are doing correct things", () => {
         .getElementById(prjConst.EDIT_ID)
         .dispatchEvent(new KeyboardEvent("keypress", { keyCode: 13 }));
     }
+  });
+
+  it("test if navigator blocking it's data then work is not stopped", (done) => {
+    let fakeShowFunc = (/*el, lat, lon*/) => {
+      expect(lsItems[prjConst.MY_LOCATION_LON]).toEqual(4);
+      expect(lsItems[prjConst.MY_LOCATION_LAT]).toEqual(3);
+      done();
+    };
+
+    window.fetch = () => {
+      return new Promise((resolve) => {
+        process.nextTick(() => {
+          resolve({
+            json: () => {
+              return { latitude: 3, longitude: 4 };
+            },
+          });
+        });
+      });
+    };
+
+    //clear local storage
+    lsItems = {};
+
+    //blocking navigator's data
+    navPassExecute = 0;
+
+    ui.createUI(document.querySelector("div"), fakeShowFunc);
   });
 });

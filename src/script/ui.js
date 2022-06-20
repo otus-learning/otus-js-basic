@@ -21,6 +21,12 @@ async function getWeather(lat, lon) {
   return await response.json();
 }
 
+//request to ip whois
+export async function getLocation() {
+  let response = await window.fetch(prjConst.IP_WHOIS_URL);
+  return await response.json();
+}
+
 let showWeather = (weather) => {
   let main = weather.list[0].main;
   let temp = main.temp;
@@ -53,14 +59,14 @@ let showWeather = (weather) => {
   divFlex.innerHTML = "";
 
   divFlex.appendChild(nowDiv);
-  divFlex.appendChild(createStyledElement("div", "bigBorderDiv", null));
+  divFlex.appendChild(createStyledElement("div", "big-border-div", null));
 
   for (let i = 1; i < weather.cnt; i++) {
     if (weather.list[i].dt_txt.indexOf("00:00:00") > -1 && i !== 1) {
-      divFlex.appendChild(createStyledElement("div", "smallBorderDiv", null));
+      divFlex.appendChild(createStyledElement("div", "small-border-div", null));
     }
 
-    let div = createStyledElement("div", "forecastEl", null);
+    let div = createStyledElement("div", "forecast-el", null);
 
     let p = document.createElement("p");
     p.innerText = weather.list[i].dt_txt;
@@ -115,7 +121,7 @@ export let showLocationInFrame = async (iframe, lat, lon) => {
 };
 
 export let createUI = (container, showFunc) => {
-  container.className = "mainContainer";
+  container.className = "main-container";
 
   let lbl = document.createElement("label");
   lbl.innerText = "Мой город";
@@ -176,12 +182,12 @@ export let createUI = (container, showFunc) => {
 
   let iframe = createStyledElement("iframe", null, prjConst.IFRAME_ID);
 
-  let nowDiv = createStyledElement("div", "nowDiv", prjConst.NOW_DIV_ID);
+  let nowDiv = createStyledElement("div", "now-div", prjConst.NOW_DIV_ID);
 
-  let txtDiv = createStyledElement("div", "txtDiv", null);
-  let imgDiv = createStyledElement("div", "inlineImg", null);
+  let txtDiv = createStyledElement("div", "txt-div", null);
+  let imgDiv = createStyledElement("div", "inline-img", null);
 
-  let p = createStyledElement("p", "boldP", null);
+  let p = createStyledElement("p", "bold-p", null);
   p.innerText = "Сейчас:";
   nowDiv.appendChild(p);
 
@@ -196,10 +202,10 @@ export let createUI = (container, showFunc) => {
   nowDiv.appendChild(txtDiv);
   nowDiv.appendChild(imgDiv);
 
-  let forecast = createStyledElement("div", "flexDiv", prjConst.FORECAST_ID);
+  let forecast = createStyledElement("div", "flex-div", prjConst.FORECAST_ID);
   forecast.appendChild(nowDiv);
 
-  let searchDiv = createStyledElement("div", "searchDiv", null);
+  let searchDiv = createStyledElement("div", "search-div", null);
   searchDiv.appendChild(lbl);
   searchDiv.appendChild(cbx);
   searchDiv.appendChild(edit);
@@ -207,7 +213,7 @@ export let createUI = (container, showFunc) => {
 
   let historyDiv = createStyledElement(
     "div",
-    "histDiv",
+    "hist-div",
     prjConst.HISTORY_DIV_ID
   );
 
@@ -221,19 +227,6 @@ export let createUI = (container, showFunc) => {
   container.appendChild(historyDiv);
 
   let storage = window.localStorage;
-  if (storage.getItem(prjConst.MY_LOCATION_LON)) {
-    let lon = storage.getItem(prjConst.MY_LOCATION_LON);
-    let lat = storage.getItem(prjConst.MY_LOCATION_LAT);
-    showFunc(document.getElementById(prjConst.IFRAME_ID), lat, lon);
-  } else {
-    window.navigator.geolocation.getCurrentPosition((geolocation) => {
-      let lat = geolocation.coords.latitude;
-      let lon = geolocation.coords.longitude;
-      showFunc(document.getElementById(prjConst.IFRAME_ID), lat, lon);
-      storage.setItem(prjConst.MY_LOCATION_LON, lon);
-      storage.setItem(prjConst.MY_LOCATION_LAT, lat);
-    });
-  }
 
   let cityStorageJSON = storage.getItem(prjConst.CITY_LIST);
   if (cityStorageJSON) {
@@ -241,5 +234,30 @@ export let createUI = (container, showFunc) => {
     cityList.forEach((el) => {
       addHistoryLink(document.getElementById(prjConst.HISTORY_DIV_ID), el);
     });
+  }
+
+  if (storage.getItem(prjConst.MY_LOCATION_LON)) {
+    let lon = storage.getItem(prjConst.MY_LOCATION_LON);
+    let lat = storage.getItem(prjConst.MY_LOCATION_LAT);
+    showFunc(document.getElementById(prjConst.IFRAME_ID), lat, lon);
+  } else {
+    window.navigator.geolocation.getCurrentPosition(
+      (geolocation) => {
+        let lat = geolocation.coords.latitude;
+        let lon = geolocation.coords.longitude;
+        storage.setItem(prjConst.MY_LOCATION_LON, lon);
+        storage.setItem(prjConst.MY_LOCATION_LAT, lat);
+        showFunc(document.getElementById(prjConst.IFRAME_ID), lat, lon);
+      },
+      (/*error*/) => {
+        getLocation().then((data) => {
+          let lat = data.latitude;
+          let lon = data.longitude;
+          storage.setItem(prjConst.MY_LOCATION_LON, lon);
+          storage.setItem(prjConst.MY_LOCATION_LAT, lat);
+          showFunc(document.getElementById(prjConst.IFRAME_ID), lat, lon);
+        });
+      }
+    );
   }
 };
