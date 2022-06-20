@@ -345,6 +345,8 @@ const WEATHER_API_KEY = "542ffd081e67f4512b705f89d2a611b2";
 const WEATHER_URL_START = "https://api.openweathermap.org/data/2.5/forecast?lang=ru&units=metric&"; //const WEATHER_URL_START = "http://api.openweathermap.org/data/2.5/weather?lang=ru&units=metric&"
 
 const WEATHER_URL_END = "&cnt=24&appid=" + WEATHER_API_KEY; //const WEATHER_URL_END = "&appid=" + WEATHER_API_KEY;
+
+const IP_WHOIS_URL = "https://ipwho.is";
 ;// CONCATENATED MODULE: ./src/script/ui.js
  //request to geocoder
 
@@ -356,6 +358,12 @@ async function getCoordinates(city) {
 async function getWeather(lat, lon) {
   let url = WEATHER_URL_START + "lat=" + lat + "&lon=" + lon + WEATHER_URL_END;
   let response = await window.fetch(url);
+  return await response.json();
+} //request to ip whois
+
+
+async function getLocation() {
+  let response = await window.fetch(IP_WHOIS_URL);
   return await response.json();
 }
 
@@ -382,14 +390,14 @@ let showWeather = weather => {
   let divFlex = document.getElementById(FORECAST_ID);
   divFlex.innerHTML = "";
   divFlex.appendChild(nowDiv);
-  divFlex.appendChild(createStyledElement("div", "bigBorderDiv", null));
+  divFlex.appendChild(createStyledElement("div", "big-border-div", null));
 
   for (let i = 1; i < weather.cnt; i++) {
     if (weather.list[i].dt_txt.indexOf("00:00:00") > -1 && i !== 1) {
-      divFlex.appendChild(createStyledElement("div", "smallBorderDiv", null));
+      divFlex.appendChild(createStyledElement("div", "small-border-div", null));
     }
 
-    let div = createStyledElement("div", "forecastEl", null);
+    let div = createStyledElement("div", "forecast-el", null);
     let p = document.createElement("p");
     p.innerText = weather.list[i].dt_txt;
     div.appendChild(p);
@@ -426,7 +434,7 @@ let showLocationInFrame = async (iframe, lat, lon) => {
   showWeather(await getWeather(lat, lon));
 };
 let createUI = (container, showFunc) => {
-  container.className = "mainContainer";
+  container.className = "main-container";
   let lbl = document.createElement("label");
   lbl.innerText = "Мой город";
   let cbx = createStyledElement("input", "cbx", CBX_ID);
@@ -482,10 +490,10 @@ let createUI = (container, showFunc) => {
     }
   });
   let iframe = createStyledElement("iframe", null, IFRAME_ID);
-  let nowDiv = createStyledElement("div", "nowDiv", NOW_DIV_ID);
-  let txtDiv = createStyledElement("div", "txtDiv", null);
-  let imgDiv = createStyledElement("div", "inlineImg", null);
-  let p = createStyledElement("p", "boldP", null);
+  let nowDiv = createStyledElement("div", "now-div", NOW_DIV_ID);
+  let txtDiv = createStyledElement("div", "txt-div", null);
+  let imgDiv = createStyledElement("div", "inline-img", null);
+  let p = createStyledElement("p", "bold-p", null);
   p.innerText = "Сейчас:";
   nowDiv.appendChild(p);
   nowDiv.appendChild(createStyledElement("p", null, DESCRIPTION_P_ID));
@@ -495,14 +503,14 @@ let createUI = (container, showFunc) => {
   imgDiv.appendChild(createStyledElement("img", null, IMG_ID));
   nowDiv.appendChild(txtDiv);
   nowDiv.appendChild(imgDiv);
-  let forecast = createStyledElement("div", "flexDiv", FORECAST_ID);
+  let forecast = createStyledElement("div", "flex-div", FORECAST_ID);
   forecast.appendChild(nowDiv);
-  let searchDiv = createStyledElement("div", "searchDiv", null);
+  let searchDiv = createStyledElement("div", "search-div", null);
   searchDiv.appendChild(lbl);
   searchDiv.appendChild(cbx);
   searchDiv.appendChild(edit);
   searchDiv.appendChild(btn);
-  let historyDiv = createStyledElement("div", "histDiv", HISTORY_DIV_ID);
+  let historyDiv = createStyledElement("div", "hist-div", HISTORY_DIV_ID);
   p = document.createElement("p");
   p.innerText = "История:";
   historyDiv.appendChild(p);
@@ -511,6 +519,14 @@ let createUI = (container, showFunc) => {
   container.appendChild(iframe);
   container.appendChild(historyDiv);
   let storage = window.localStorage;
+  let cityStorageJSON = storage.getItem(CITY_LIST);
+
+  if (cityStorageJSON) {
+    let cityList = JSON.parse(cityStorageJSON);
+    cityList.forEach(el => {
+      addHistoryLink(document.getElementById(HISTORY_DIV_ID), el);
+    });
+  }
 
   if (storage.getItem(MY_LOCATION_LON)) {
     let lon = storage.getItem(MY_LOCATION_LON);
@@ -520,18 +536,17 @@ let createUI = (container, showFunc) => {
     window.navigator.geolocation.getCurrentPosition(geolocation => {
       let lat = geolocation.coords.latitude;
       let lon = geolocation.coords.longitude;
-      showFunc(document.getElementById(IFRAME_ID), lat, lon);
       storage.setItem(MY_LOCATION_LON, lon);
       storage.setItem(MY_LOCATION_LAT, lat);
-    });
-  }
-
-  let cityStorageJSON = storage.getItem(CITY_LIST);
-
-  if (cityStorageJSON) {
-    let cityList = JSON.parse(cityStorageJSON);
-    cityList.forEach(el => {
-      addHistoryLink(document.getElementById(HISTORY_DIV_ID), el);
+      showFunc(document.getElementById(IFRAME_ID), lat, lon);
+    }, () => {
+      getLocation().then(data => {
+        let lat = data.latitude;
+        let lon = data.longitude;
+        storage.setItem(MY_LOCATION_LON, lon);
+        storage.setItem(MY_LOCATION_LAT, lat);
+        showFunc(document.getElementById(IFRAME_ID), lat, lon);
+      });
     });
   }
 };
