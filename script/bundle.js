@@ -321,6 +321,7 @@
 var __webpack_exports__ = {};
 
 ;// CONCATENATED MODULE: ./src/script/prjConst.js
+const MAIN_CONTAINER_ID = "mainContainerId";
 const NOW_DIV_ID = "nowId";
 const BTN_ID = "btnId";
 const EDIT_ID = "edtId";
@@ -347,94 +348,102 @@ const WEATHER_URL_START = "https://api.openweathermap.org/data/2.5/forecast?lang
 const WEATHER_URL_END = "&cnt=24&appid=" + WEATHER_API_KEY; //const WEATHER_URL_END = "&appid=" + WEATHER_API_KEY;
 
 const IP_WHOIS_URL = "https://ipwho.is";
-;// CONCATENATED MODULE: ./src/script/ui.js
+const WEATHER_FETCH_ERR = "Ошибка получения данных";
+;// CONCATENATED MODULE: ./src/script/fetches.js
  //request to geocoder
 
 async function getCoordinates(city) {
-  let response = await window.fetch(GEOCODER_URL_START + city + GEOCODER_URL_END);
-  return await response.json();
-} //request to weather provider
-
-async function getWeather(lat, lon) {
-  let url = WEATHER_URL_START + "lat=" + lat + "&lon=" + lon + WEATHER_URL_END;
-  let response = await window.fetch(url);
+  let response = await (
+    /*window.*/
+    fetch(`${GEOCODER_URL_START}${city}${GEOCODER_URL_END}`)
+  );
   return await response.json();
 } //request to ip whois
 
-
 async function getLocation() {
-  let response = await window.fetch(IP_WHOIS_URL);
+  let response = await (
+    /*window.*/
+    fetch(IP_WHOIS_URL)
+  );
   return await response.json();
 }
+;// CONCATENATED MODULE: ./src/script/events.js
 
-let showWeather = weather => {
-  let main = weather.list[0].main;
-  let temp = main.temp;
 
-  if (isNaN(temp)) {
-    document.getElementById(DESCRIPTION_P_ID).innerText = "ОШИБКА!";
-    document.getElementById(TEMP_P_ID).innerText = "Температура: ОШИБКА!";
-    document.getElementById(HUMIDITY_P_ID).innerText = "Влажность: ОШИБКА!";
-    document.getElementById(WIND_P_ID).innerText = "Скорость ветра: ОШИБКА!";
-    return;
-  }
 
-  document.getElementById(TEMP_P_ID).innerText = "Температура: " + Number(temp).toFixed(1) + " \u2103";
-  document.getElementById(DESCRIPTION_P_ID).innerText =
-  /*"За окном: " +*/
-  weather.list[0].weather[0].description;
-  document.getElementById(HUMIDITY_P_ID).innerText = "Влажность: " + main.humidity + "%";
-  document.getElementById(WIND_P_ID).innerText = "Скорость ветра: " + weather.list[0].wind.speed + "м/с";
-  document.getElementById(IMG_ID).src = "http://openweathermap.org/img/wn/" + weather.list[0].weather[0].icon + "@2x.png";
-  let nowDiv = document.getElementById(NOW_DIV_ID);
-  let divFlex = document.getElementById(FORECAST_ID);
-  divFlex.innerHTML = "";
-  divFlex.appendChild(nowDiv);
-  divFlex.appendChild(createStyledElement("div", "big-border-div", null));
+let aClick = e => {
+  document.getElementById(EDIT_ID).value = e.target.innerText;
+  document.getElementById(BTN_ID).click();
+};
+let btnClick = () => {
+  let city = document.getElementById(EDIT_ID).value;
+  document.getElementById(EDIT_ID).value = "";
+  getCoordinates(city).then(cityInfo => {
+    let lat = cityInfo[0].lat;
+    let lon = cityInfo[0].lon;
+    let storage =
+    /*window.*/
+    localStorage;
 
-  for (let i = 1; i < weather.cnt; i++) {
-    if (weather.list[i].dt_txt.indexOf("00:00:00") > -1 && i !== 1) {
-      divFlex.appendChild(createStyledElement("div", "small-border-div", null));
+    if (document.getElementById(CBX_ID).checked) {
+      storage.setItem(MY_LOCATION_LON, lon);
+      storage.setItem(MY_LOCATION_LAT, lat);
+      document.getElementById(CBX_ID).checked = false;
     }
 
-    let div = createStyledElement("div", "forecast-el", null);
-    let p = document.createElement("p");
-    p.innerText = weather.list[i].dt_txt;
-    div.appendChild(p);
-    let img = document.createElement("img");
-    img.src = "http://openweathermap.org/img/wn/" + weather.list[i].weather[0].icon + "@2x.png";
-    div.appendChild(img);
-    p = document.createElement("p");
-    p.innerText = weather.list[i].main.temp.toFixed(1) + " \u2103";
-    div.appendChild(p);
-    divFlex.appendChild(div);
+    let cityStorageJSON = storage.getItem(CITY_LIST);
+    let cityList = cityStorageJSON ? JSON.parse(cityStorageJSON) : [];
+    let isNeedAddToHistory = true;
+
+    for (let i = 0; i < cityList.length; i++) {
+      if (cityList[i].toLowerCase() === city.toLowerCase()) {
+        isNeedAddToHistory = false;
+        break;
+      }
+    }
+
+    if (isNeedAddToHistory) {
+      if (cityList.length === LS_CAPACITY) {
+        cityList.shift();
+        let aList = document.querySelectorAll("a");
+        aList[0].parentNode.removeChild(aList[0]);
+      }
+
+      cityList.push(city);
+      storage.setItem(CITY_LIST, JSON.stringify(cityList));
+      addHistoryLink(document.getElementById(HISTORY_DIV_ID), city);
+    }
+
+    document.getElementById(MAIN_CONTAINER_ID).showFunc(document.getElementById(IFRAME_ID), lat, lon);
+  });
+};
+let edtKeypress = e => {
+  if (e.keyCode === 13) {
+    document.getElementById(BTN_ID).click();
   }
 };
+;// CONCATENATED MODULE: ./src/script/ui.js
+
+
 
 let addHistoryLink = (container, city) => {
   let a = document.createElement("a");
   a.innerText = city;
   a.href = "#";
-  a.addEventListener("click", e => {
-    document.getElementById(EDIT_ID).value = e.target.innerText;
-    document.getElementById(BTN_ID).click();
-  });
+  a.addEventListener("click", aClick);
   container.appendChild(a);
 };
 let createStyledElement = (tag, style, id) => {
   let el = document.createElement(tag);
-  style !== null && (el.className = style);
-  id !== null && (el.id = id);
+  style && (el.className = style);
+  id && (el.id = id);
   return el;
-};
-let showLocationInFrame = async (iframe, lat, lon) => {
-  iframe.src = MAP_URL_START;
-  iframe.src += Number(lon) - 0.05 + "%2C" + (Number(lat) - 0.05) + "%2C" + (Number(lon) + 0.05) + "%2C" + (Number(lat) + 0.05);
-  iframe.src += MAP_URL_END;
-  showWeather(await getWeather(lat, lon));
 };
 let createUI = (container, showFunc) => {
   container.className = "main-container";
+  container.id = MAIN_CONTAINER_ID; //save show function for using in the events
+
+  container.showFunc = showFunc;
   let lbl = document.createElement("label");
   lbl.innerText = "Мой город";
   let cbx = createStyledElement("input", "cbx", CBX_ID);
@@ -442,53 +451,10 @@ let createUI = (container, showFunc) => {
   let btn = createStyledElement("input", "btn", BTN_ID);
   btn.type = "button";
   btn.value = "Поиск";
-  btn.addEventListener("click", () => {
-    let city = document.getElementById(EDIT_ID).value;
-    document.getElementById(EDIT_ID).value = "";
-    getCoordinates(city).then(cityInfo => {
-      let lat = cityInfo[0].lat;
-      let lon = cityInfo[0].lon;
-      let storage = window.localStorage;
-
-      if (document.getElementById(CBX_ID).checked) {
-        storage.setItem(MY_LOCATION_LON, lon);
-        storage.setItem(MY_LOCATION_LAT, lat);
-        document.getElementById(CBX_ID).checked = false;
-      }
-
-      let cityStorageJSON = storage.getItem(CITY_LIST);
-      let cityList = cityStorageJSON ? JSON.parse(cityStorageJSON) : [];
-      let isNeedAddToHistory = true;
-
-      for (let i = 0; i < cityList.length; i++) {
-        if (cityList[i].toLowerCase() === city.toLowerCase()) {
-          isNeedAddToHistory = false;
-          break;
-        }
-      }
-
-      if (isNeedAddToHistory) {
-        if (cityList.length === LS_CAPACITY) {
-          cityList.shift();
-          let aList = document.querySelectorAll("a");
-          aList[0].parentNode.removeChild(aList[0]);
-        }
-
-        cityList.push(city);
-        storage.setItem(CITY_LIST, JSON.stringify(cityList));
-        addHistoryLink(document.getElementById(HISTORY_DIV_ID), city);
-      }
-
-      showFunc(document.getElementById(IFRAME_ID), lat, lon);
-    });
-  });
+  btn.addEventListener("click", btnClick);
   let edit = createStyledElement("input", null, EDIT_ID);
   edit.type = "text";
-  edit.addEventListener("keypress", e => {
-    if (e.keyCode === 13) {
-      document.getElementById(BTN_ID).click();
-    }
-  });
+  edit.addEventListener("keypress", edtKeypress);
   let iframe = createStyledElement("iframe", null, IFRAME_ID);
   let nowDiv = createStyledElement("div", "now-div", NOW_DIV_ID);
   let txtDiv = createStyledElement("div", "txt-div", null);
@@ -518,7 +484,9 @@ let createUI = (container, showFunc) => {
   container.appendChild(forecast);
   container.appendChild(iframe);
   container.appendChild(historyDiv);
-  let storage = window.localStorage;
+  let storage =
+  /*window.*/
+  localStorage;
   let cityStorageJSON = storage.getItem(CITY_LIST);
 
   if (cityStorageJSON) {
@@ -533,7 +501,8 @@ let createUI = (container, showFunc) => {
     let lat = storage.getItem(MY_LOCATION_LAT);
     showFunc(document.getElementById(IFRAME_ID), lat, lon);
   } else {
-    window.navigator.geolocation.getCurrentPosition(geolocation => {
+    /*window.*/
+    navigator.geolocation.getCurrentPosition(geolocation => {
       let lat = geolocation.coords.latitude;
       let lon = geolocation.coords.longitude;
       storage.setItem(MY_LOCATION_LON, lon);
@@ -550,8 +519,79 @@ let createUI = (container, showFunc) => {
     });
   }
 };
+;// CONCATENATED MODULE: ./src/script/forecast.js
+
+ //request to weather provider
+
+async function getWeather(lat, lon) {
+  let url = `${WEATHER_URL_START}lat=${lat}&lon=${lon}${WEATHER_URL_END}`;
+  let response = await (
+    /*window.*/
+    fetch(url)
+  );
+
+  if (response.ok) {
+    return await response.json();
+  }
+
+  return new Promise((resolve, reject) => {
+    reject("-");
+  });
+}
+
+let showErr = err => {
+  document.getElementById(DESCRIPTION_P_ID).innerText = WEATHER_FETCH_ERR;
+  document.getElementById(TEMP_P_ID).innerText = `Температура: ${err}`;
+  document.getElementById(HUMIDITY_P_ID).innerText = `Влажность: ${err}`;
+  document.getElementById(WIND_P_ID).innerText = `Скорость ветра: ${err}`;
+};
+
+let showWeather = weather => {
+  let wList = weather.list;
+  document.getElementById(TEMP_P_ID).innerText = `Температура: ${wList[0].main.temp} \u2103`;
+  document.getElementById(DESCRIPTION_P_ID).innerText = wList[0].weather[0].description;
+  document.getElementById(HUMIDITY_P_ID).innerText = `Влажность: ${wList[0].main.humidity}%`;
+  document.getElementById(WIND_P_ID).innerText = `Скорость ветра: ${wList[0].wind.speed} м/с`;
+  document.getElementById(IMG_ID).src = `http://openweathermap.org/img/wn/${wList[0].weather[0].icon}@2x.png`;
+  let nowDiv = document.getElementById(NOW_DIV_ID);
+  let divFlex = document.getElementById(FORECAST_ID);
+  divFlex.innerHTML = "";
+  divFlex.appendChild(nowDiv);
+  divFlex.appendChild(createStyledElement("div", "big-border-div", null));
+
+  for (let i = 1; i < weather.cnt; i++) {
+    if (wList[i].dt_txt.indexOf("00:00:00") > -1 && i !== 1) {
+      divFlex.appendChild(createStyledElement("div", "small-border-div", null));
+    }
+
+    let div = createStyledElement("div", "forecast-el", null);
+    let p = document.createElement("p");
+    p.innerText = wList[i].dt_txt;
+    div.appendChild(p);
+    let img = document.createElement("img");
+    img.src = `http://openweathermap.org/img/wn/${wList[i].weather[0].icon}@2x.png`;
+    div.appendChild(img);
+    p = document.createElement("p");
+    p.innerText = `${wList[i].main.temp} \u2103`;
+    div.appendChild(p);
+    divFlex.appendChild(div);
+  }
+};
+
+let showLocationInFrame = async (iframe, lat, lon) => {
+  lat = Number(lat);
+  lon = Number(lon);
+  iframe.src = `${MAP_URL_START}${lon - 0.05}%2C${lat - 0.05}%2C${lon + 0.05}%2C${lat + 0.05}${MAP_URL_END}`;
+
+  try {
+    showWeather(await getWeather(lat, lon));
+  } catch (e) {
+    showErr(e);
+  }
+};
 ;// CONCATENATED MODULE: ./src/script/bundle.js
 __webpack_require__.e(/* import() */ 74).then(__webpack_require__.bind(__webpack_require__, 74));
+
 
 let mainDiv = document.createElement("div");
 document.body.appendChild(mainDiv);
