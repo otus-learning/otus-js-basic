@@ -19,3 +19,5 @@ API used:
 The project consists of one file of **ui.js**, with the implementation of the logic and user interface + file of used constants **prjConst.js**. There is also a small files with styles and a webpage template (**style.css**, **index.html**).
 
 ![Coverage](./coverage/badges.svg)
+
+![Sanity check](https://github.com/otus-learning/otus-learning/actions/workflows/sanity-check.yml/badge.svg)

@@ -6,10 +6,8 @@
   "scripts": {
     "build-dev": "webpack --config-name dev-cfg",
     "build-public": "webpack --config-name public-cfg",
-    "clean-dev": "rm ./dev/ -r",
-    "clean-public": "rm ./public/ -r",
-    "clean-coverage": "rm ./coverage/ -r",
     "clean-all": "rm ./dev/ -r || rm ./public/ -r || rm ./coverage/ -r",
+    "preserver": "npm run build-dev",
     "server": "webpack server",
     "test": "jest --silent=false --coverage",
     "make-badges": "coverage-badges --style flat --label 'jest --coverage'",

@@ -1,5 +1,6 @@
 import("../css/style.css");
-import { createUI, showLocationInFrame } from "./ui.js";
+import { createUI } from "./ui.js";
+import { showLocationInFrame } from "./forecast.js";
 
 let mainDiv = document.createElement("div");
 document.body.appendChild(mainDiv);

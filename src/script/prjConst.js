@@ -1,3 +1,4 @@
+export const MAIN_CONTAINER_ID = "mainContainerId";
 export const NOW_DIV_ID = "nowId";
 export const BTN_ID = "btnId";
 export const EDIT_ID = "edtId";
@@ -30,3 +31,5 @@ export const WEATHER_URL_START =
 export const WEATHER_URL_END = "&cnt=24&appid=" + WEATHER_API_KEY;
 //const WEATHER_URL_END = "&appid=" + WEATHER_API_KEY;
 export const IP_WHOIS_URL = "https://ipwho.is";
+
+export const WEATHER_FETCH_ERR = "Ошибка получения данных";
