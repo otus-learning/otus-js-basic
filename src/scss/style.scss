@@ -1,0 +1,73 @@
+$letter-clr: red;
+
+.header-block {
+  display: flex;
+  justify-content: center;
+  flex-flow: row wrap;
+  gap: 1%;
+  margin: 1%;
+
+  &__img {
+    width: 20%;
+    object-fit: contain;
+    min-width: 250px;
+  }
+
+  &__text {
+    text-align: right;
+    width: 30%;
+  }
+}
+
+.navigation {
+  font-size: 2rem;
+  display: flex;
+  gap: 5%;
+  width: 40%;
+
+  &__link {
+    width: 25%;
+  }
+}
+
+.main-block {
+  margin: 1%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  gap: 3%;
+
+  &__text-block {
+    &--centered {
+      width: 70%;
+    }
+
+    &--left-right {
+      width: 15%;
+    }
+  }
+}
+
+.text-block {
+  min-width: 20rem;
+
+  &__p {
+    &--margined {
+      margin-bottom: 4rem;
+    }
+
+    &--margined::first-letter {
+      color: $letter-clr;
+      font-style: italic;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+.footer-block {
+  margin: 1%;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-evenly;
+  gap: 3%;
+}
