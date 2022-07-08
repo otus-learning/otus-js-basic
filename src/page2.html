@@ -22,19 +22,24 @@
         <p class="text-block__p text-block__p--margined">
           Динамическое создание "карусели" на странице. Может быть создана с
           помощью конструктора
-          <span style="font-weight: bold">new Carousel(elem)</span>, в который в
-          качестве параметра
+          <span style="font-weight: bold">new Carousel(elem [, urls])</span>, в
+          который в качестве параметра
           <span style="font-weight: bold">elem</span> передаётся родительский
-          контейнер для карусели. В родительский контейнер помещается в момент
-          создания. В созданную карусель можно добавлять картинки используя
-          метод <span style="font-weight: bold">add</span>. Количество элементов
-          и текущий элемент в карусели доступны через свойства
+          контейнер для карусели, а также опциональный массив
+          <span style="font-weight: bold">urls</span> с URL`ами
+          картинок-элементов, инициализирующих карусель. В родительский
+          контейнер помещается в момент создания. В созданной карусели можно
+          изменять количество элементов, используя методы
+          <span style="font-weight: bold">add(URL[, idx])</span> и
+          <span style="font-weight: bold">remove([idx])</span>. Количество
+          элементов и текущий элемент в карусели доступны через свойства
           <span style="font-weight: bold">count</span> и
           <span style="font-weight: bold">index</span>, соответственно. На этой
           странице можно создавать карусели через кнопку
-          <span style="font-weight: bold">create</span>. И добавлять в последнюю
-          созданную карусель картинки по URL через кнопку
-          <span style="font-weight: bold">add</span>.
+          <span style="font-weight: bold">create</span>. И добавлять/удалять
+          последний элемент в последней созданной карусели через кнопки
+          <span style="font-weight: bold">add</span>. и
+          <span style="font-weight: bold">remove</span>.
           <a href="page3.html">Вот и всё</a>.
         </p>
         <button
@@ -71,6 +76,19 @@
 	})()"
         >
           add
+        </button>
+        <button
+          style="width: 50px; margin-top: 15px"
+          onclick="((e) => {
+		if (!window.carousels)
+	    	{
+			alert('На странице нет каруселей!');
+			return;
+	    	}
+		(window.carousels.length) ? window.carousels[window.carousels.length - 1].remove() : window.carousels[0].remove();
+	})()"
+        >
+          remove
         </button>
       </section>
     </main>

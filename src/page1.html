@@ -18,20 +18,20 @@
     <main class="main-block">
       <section>
         <div style="width: 500px; height: 500px">
-          <ul class="_carousel">
-            <li class="_carousel__item">
+          <ul class="carousel">
+            <li class="carousel__item">
               <img
                 src="https://image.shutterstock.com/image-photo/sunrise-sunset-behind-trees-reflection-260nw-2110449383.jpg"
                 alt="pic"
               />
             </li>
-            <li class="_carousel__item">
+            <li class="carousel__item">
               <img
                 src="https://image.shutterstock.com/image-photo/small-dragon-lizard-600w-1370804666.jpg"
                 alt="pic"
               />
             </li>
-            <li class="_carousel__item">
+            <li class="carousel__item">
               <img
                 src="https://image.shutterstock.com/image-photo/sunrise-on-tropical-beach-las-600w-582826123.jpg"
                 alt="pic"
@@ -47,10 +47,10 @@
           Императивная "карусель". Может быть статически инициализирована на
           странице: в любой контейнер требуется добавить список
           <span style="font-weight: bold">ul</span> с классом
-          <span style="font-weight: bold; color: red">"_carousel"</span> и
-          внутрь его поместить элементы
-          <span style="font-weight: bold">li</span> с классами
-          <span style="font-weight: bold; color: red">"_carousel__item"</span>.
+          <span style="font-weight: bold; color: red">"carousel"</span> и внутрь
+          его поместить элементы <span style="font-weight: bold">li</span> с
+          классами
+          <span style="font-weight: bold; color: red">"carousel__item"</span>.
           Внутри элемента списка помещается картинка c тегом
           <span style="font-weight: bold">img</span>. Стиль у картинки может
           быть любой или не быть вообще. Также необходимо подключить файлы со
@@ -59,14 +59,17 @@
           страницы такие карусели будут доступны через массив объектов
           <span style="font-weight: bold">window.carousels</span>. В этом
           массиве каждый элемент представляет собой отдельную карусель на
-          веб-странице в порядке их появления в потоке документа. Добавление
-          новых элементов возможно через метод
-          <span style="font-weight: bold">add</span> объекта карусель.
+          веб-странице в порядке их появления в потоке документа. Изменение
+          количества элементов возможно через методы
+          <span style="font-weight: bold">add(URL[, idx])</span> и
+          <span style="font-weight: bold">remove([idx])</span> объекта карусель.
           Количество элементов и текущий элемент в карусели доступны через
           свойства <span style="font-weight: bold">count</span> и
           <span style="font-weight: bold">index</span> соответственно. Через
-          поле ввода и кнопку <span style="font-weight: bold">add</span> внизу
-          можно добавить новые изображения по URL. На
+          поле ввода и кнопки <span style="font-weight: bold">add</span> и
+          <span style="font-weight: bold">remove</span> внизу можно изменять
+          количество элементов: добавить картинку можно по URL в указанный
+          индекс, а удалить можно по индексу. На
           <a href="page2.html">следующей</a> странице будет динамическое
           создание карусели.
         </p>
@@ -77,16 +80,35 @@
           style="width: 300px; margin-top: 15px"
           value="https://image.shutterstock.com/image-photo/beautiful-beach-tropical-sea-260nw-233247169.jpg"
         />
+        <input
+          id="idx"
+          type="text"
+          style="width: 30px; margin-top: 15px"
+          value="2"
+        />
         <button
           style="width: 50px; margin-top: 15px"
           onclick="((e) => {
+		let idx = +document.getElementById('idx').value;
+
 		let url = document.getElementById('urlText').value;
-		window.carousels[0].add(url);
+	  window.carousels[0].add(url, idx);
 		let lbl = document.getElementById('countLabel');
 	    	lbl.innerHTML = `img count = ${window.carousels[0].count}`;
 	})()"
         >
           add
+        </button>
+        <button
+          style="width: 50px; margin-top: 15px"
+          onclick="((e) => {
+		let idx = +document.getElementById('idx').value;
+		window.carousels[0].remove(idx);
+		let lbl = document.getElementById('countLabel');
+	    	lbl.innerHTML = `img count = ${window.carousels[0].count}`;
+	})()"
+        >
+          remove
         </button>
       </section>
     </main>
