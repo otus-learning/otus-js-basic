@@ -1,3 +1,4 @@
 import("../scss/reset.scss");
 import("../scss/style.scss");
-import("../pic/bg.png");
+import("../css/carousel.css");
+import("../script/carousel.js");

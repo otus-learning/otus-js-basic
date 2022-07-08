@@ -3,67 +3,93 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="css/fonts.css" rel="stylesheet" />
-    <link href="css/style.css" rel="stylesheet" />
-    <title>Blog</title>
+    <title>Carousel</title>
   </head>
   <body>
     <header class="header-block">
-      <img class="header-block__img" src="pic/bg.png" />
       <nav class="header-block__navigation navigation">
-        <a href="index.html" class="navigation__link">MAIN</a>
-        <a href="page1.html" class="navigation__link">CONTACTS</a>
-        <a href="page2.html" class="navigation__link">BLOG</a>
-        <a href="page3.html" class="navigation__link">CAROUSEL</a>
+        <a href="index.html" class="navigation__link">DECLARATIVE</a>
+        <a href="page1.html" class="navigation__link">IMPERATIVE</a>
+        <a href="page2.html" class="navigation__link">CREATING</a>
+        <a href="page3.html" class="navigation__link">THE END!</a>
       </nav>
-      <h1 class="header-block__text">BLOG</h1>
+      <h1 class="header-block__text">CREATING</h1>
     </header>
     <main class="main-block">
-      <section
-        class="main-block__text-block text-block main-block__text-block--centered"
-      >
-        <p class="text-block__p text-block__p--margined">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-        </p>
-
-        <p class="text-block__p text-block__p--margined">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
-        </p>
-        <p class="text-block__p text-block__p--margined">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum
-          dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-          incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-          commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-          velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-          occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-          mollit anim id est laborum.
-        </p>
-      </section>
       <section
         class="main-block__text-block text-block main-block__text-block--left-right"
       >
         <p class="text-block__p text-block__p--margined">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          Динамическое создание "карусели" на странице. Может быть создана с
+          помощью конструктора
+          <span style="font-weight: bold">new Carousel(elem [, urls])</span>, в
+          который в качестве параметра
+          <span style="font-weight: bold">elem</span> передаётся родительский
+          контейнер для карусели, а также опциональный массив
+          <span style="font-weight: bold">urls</span> с URL`ами
+          картинок-элементов, инициализирующих карусель. В родительский
+          контейнер помещается в момент создания. В созданной карусели можно
+          изменять количество элементов, используя методы
+          <span style="font-weight: bold">add(URL[, idx])</span> и
+          <span style="font-weight: bold">remove([idx])</span>. Количество
+          элементов и текущий элемент в карусели доступны через свойства
+          <span style="font-weight: bold">count</span> и
+          <span style="font-weight: bold">index</span>, соответственно. На этой
+          странице можно создавать карусели через кнопку
+          <span style="font-weight: bold">create</span>. И добавлять/удалять
+          последний элемент в последней созданной карусели через кнопки
+          <span style="font-weight: bold">add</span>. и
+          <span style="font-weight: bold">remove</span>.
+          <a href="page3.html">Вот и всё</a>.
         </p>
+        <button
+          style="width: 50px; margin-top: 15px"
+          onclick="((e) => {
+		let div = document.createElement('div');
+		div.style['width'] = '300px'
+		div.style['height'] = '300px'
+		document.querySelector('main').appendChild(div);
+
+						    debugger
+		(!window.carousels) && (window.carousels = []);
+		window.carousels.push(new window.Carousel(div));
+	})()"
+        >
+          create
+        </button>
+        <input
+          id="urlText"
+          type="text"
+          style="width: 300px; margin-top: 15px"
+          value="https://image.shutterstock.com/image-photo/beautiful-beach-tropical-sea-260nw-233247169.jpg"
+        />
+        <button
+          style="width: 50px; margin-top: 15px"
+          onclick="((e) => {
+		if (!window.carousels)
+	    	{
+			alert('На странице нет каруселей!');
+			return;
+	    	}
+		let url = document.getElementById('urlText').value;
+		(window.carousels.length) ? window.carousels[window.carousels.length - 1].add(url) : window.carousels[0].add(url);
+	})()"
+        >
+          add
+        </button>
+        <button
+          style="width: 50px; margin-top: 15px"
+          onclick="((e) => {
+		if (!window.carousels)
+	    	{
+			alert('На странице нет каруселей!');
+			return;
+	    	}
+		(window.carousels.length) ? window.carousels[window.carousels.length - 1].remove() : window.carousels[0].remove();
+	})()"
+        >
+          remove
+        </button>
       </section>
     </main>
     <footer class="footer-block">
