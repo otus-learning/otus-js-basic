@@ -7,7 +7,6 @@ describe("semver function testing", () => {
   });
 
   it("tests that curry function get params and do it all right", () => {
-
     jest.spyOn(console, "log").mockImplementation(() => {});
 
     console.log(

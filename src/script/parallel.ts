@@ -1,18 +1,18 @@
 // eslint-disable-next-line @typescript-eslint/ban-types
-type AnyFunc = Function; 
+type AnyFunc = Function;
 
 export class Parallel {
   result: number[] = new Array<number>();
   count = 0;
 
-  funcs: AnyFunc[] = new Array<Function>();
+  funcs: AnyFunc[] = new Array<AnyFunc>();
   resultSize = 0;
 
   constructor(count: number) {
     this.count = count;
   }
 
-  getJob(resolve: AnyFunc ) {
+  getJob(resolve: AnyFunc) {
     if (this.funcs.length) {
       (this.funcs.shift() as AnyFunc)().then((data: unknown) => {
         this.getJob(resolve);

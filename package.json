@@ -15,7 +15,6 @@
     "make-badges": "coverage-badges --style flat --label 'jest --coverage'",
     "lint": "prettier --check . && eslint . && stylelint **/*.scss",
     "lint-fix": "prettier --write . && eslint . --fix",
-    "prepare": "husky install",
     "predeploy": "npm run build-public",
     "deploy": "gh-pages -d public"
   },
@@ -51,7 +50,6 @@
     "gh-pages": "^4.0.0",
     "html-minimizer-webpack-plugin": "^3.5.0",
     "html-webpack-plugin": "^5.5.0",
-    "husky": "^8.0.1",
     "jest": "^28.1.0",
     "jest-environment-jsdom": "^28.1.0",
     "lint-staged": "^12.4.1",

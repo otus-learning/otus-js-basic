@@ -1,10 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/ban-types
-type AnyFunc = Function
+type AnyFunc = Function;
 
 export function sum(arg?: number): AnyFunc {
   const rslt: number = arg ? +arg : 0;
 
-  const innerSum: Function = (argInner: number): AnyFunc => {
+  const innerSum: AnyFunc = (argInner: number): AnyFunc => {
     let innerRslt = rslt;
 
     const anotherInnerSum = (argInner1: number): AnyFunc => {
