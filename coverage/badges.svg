@@ -1,0 +1,14 @@
+<svg width="148.6" height="20" viewBox="0 0 1486 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="jest --coverage: 94.64%">
+  <title>jest --coverage: 94.64%</title>
+  <g>
+    <rect fill="#555" width="946" height="200"/>
+    <rect fill="#97c40f" x="946" width="540" height="200"/>
+  </g>
+  <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
+    <text x="60" y="148" textLength="846" fill="#000" opacity="0.1">jest --coverage</text>
+    <text x="50" y="138" textLength="846">jest --coverage</text>
+    <text x="1001" y="148" textLength="440" fill="#000" opacity="0.1">94.64%</text>
+    <text x="991" y="138" textLength="440">94.64%</text>
+  </g>
+  
+</svg>
