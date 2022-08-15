@@ -17,4 +17,4 @@ parcelRequire=function(e,r,t,n){var i,o="function"==typeof parcelRequire&&parcel
 },{"./Templater":"YDzw"}],"xQsj":[function(require,module,exports) {
 "use strict";Object.defineProperty(exports,"__esModule",{value:!0}),require("./css/style.css");const e=require("./ui.js"),t=require("./forecast.js"),o=require("./Component"),n=new o.Component(document.getElementById("#forecast-div-id")),d=new o.Component(document.getElementById("#world-map")),r=new o.Component(document.getElementById("#search-div")),m=new o.Component(document.getElementById("#history-div"));document.body.onload=(0,e.createUI)(document.getElementById("#forecast"),t.showLocationInFrame,r,n,d,m);
 },{"./css/style.css":"zoJ8","./ui.js":"Bj9A","./forecast.js":"Mz0O","./Component":"QQZF"}]},{},["xQsj"], null)
-//# sourceMappingURL=/bundle.914f32c2.js.map
+//# sourceMappingURL=bundle.914f32c2.js.map
