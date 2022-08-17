@@ -1,12 +1,15 @@
 export namespace AbstractCalendarClasses {
+  export interface AbstractInputRecord {
+    _date?: string;
+    _toDo?: string;
+    _tag?: string;
+    _status?: string;
+    _id?: string;
+  }
+
   export interface AbstractRecord {
     isNeeded: (property: string) => boolean;
-    change: (
-      date: string,
-      toDo: string,
-      tag: string,
-      status: string
-    ) => AbstractRecord;
+    change: (record: Partial<AbstractInputRecord>) => AbstractRecord;
   }
 
   export interface AbstractSortCondition {
@@ -16,19 +19,16 @@ export namespace AbstractCalendarClasses {
 
   export interface AbstractCalendar {
     create: (
-      date: string,
       toDo: string,
-      tag?: string
+      tag?: string,
+      date?: string
     ) => Promise<AbstractRecord>;
     read: (property: string) => Promise<AbstractRecord[] | null>;
     update: (
       id: string,
-      date: string | null,
-      toDo: string | null,
-      tag: string | null,
-      status: string | null
+      newRecord: Partial<AbstractInputRecord>
     ) => Promise<AbstractRecord | null>;
-    delete: (property: string) => Promise<AbstractRecord | null>;
+    delete: (id: string) => Promise<AbstractRecord | null>;
     clear: () => Promise<boolean>;
   }
 }

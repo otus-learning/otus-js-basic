@@ -1,36 +1,61 @@
 import { CalendarClasses } from "./Calendar";
 
 (async () => {
-  const calendar = new CalendarClasses.Calendar();
+  const calendar = new CalendarClasses.Calendar("first");
+  const calendar_ = new CalendarClasses.Calendar("Second");
   await calendar.clear();
-  console.log(await calendar.create("Задача номер один", "#важные"));
-  console.log(await calendar.create("Задача номер два", "#важные"));
+  await calendar_.clear();
+  console.log("Tasks for first calendar:");
   console.log(
-    await calendar.create("Задача номер три", "#неважные", "2022.12.31")
+    await calendar.create("Задача номер один", CalendarClasses.Tags.IMPORTANT)
+  );
+  console.log(
+    await calendar.create("Задача номер два", CalendarClasses.Tags.IMPORTANT)
+  );
+  console.log(
+    await calendar.create(
+      "Задача номер три",
+      CalendarClasses.Tags.NOT_IMPORTANT,
+      "2022.12.31"
+    )
+  );
+  console.log("Tasks for second calendar:");
+  console.log(
+    await calendar_.create(
+      "Задача второго календаря",
+      CalendarClasses.Tags.NOT_IMPORTANT
+    )
   );
 
-  const records = await calendar.read("#важные");
-  console.log("All records selected by certain tag: ", records);
+  let records = await calendar.read(CalendarClasses.Tags.IMPORTANT);
+  console.log(
+    "All records selected by certain tag at the first calendar: ",
+    records
+  );
   if (records) {
     const filteredRecords = CalendarClasses.Calendar.filter(
       records,
-      new CalendarClasses.SortCondition(null, "Задача номер один", null, null),
-      new CalendarClasses.SortCondition(null, null, null, null)
+      new CalendarClasses.SortCondition({ _toDo: "Задача номер один" }),
+      new CalendarClasses.SortCondition({})
     );
     console.log("All filtered records: ", filteredRecords);
 
     filteredRecords[0] &&
-      calendar.update(
-        filteredRecords[0].id,
-        null,
-        "Очень важная задача №1",
-        null,
-        "passed"
-      );
+      calendar.update(filteredRecords[0].id, {
+        _toDo: "Очень важная задача №1",
+        _status: CalendarClasses.Statuses.PENDING,
+      });
   }
-  const updatedRecords = await calendar.read("#важные");
+  const updatedRecords = await calendar.read(CalendarClasses.Tags.IMPORTANT);
   console.log(
-    "Records with one, whos field has been updated: ",
+    "Records with one, whos field has been updated at the first calendar: ",
     updatedRecords
+  );
+  await calendar.clear();
+  console.log("Now the first calendar is clear");
+  records = await calendar_.read(CalendarClasses.Tags.NOT_IMPORTANT);
+  console.log(
+    "All records selected by certain tag at the second calendar: ",
+    records
   );
 })();

@@ -1,41 +1,47 @@
 import { AbstractCalendarClasses } from "./AbstractCalendar";
 
 export namespace CalendarClasses {
-  export class Record implements AbstractCalendarClasses.AbstractRecord {
-    private _id: string;
-    private _date: string;
-    private _toDo: string;
-    private _tag: string;
-    private _status: string;
+  export enum Statuses {
+    NEW = "new",
+    DELETED = "deleted",
+    PENDING = "pending",
+    CLOSED = "closed",
+  }
 
-    constructor(
-      record: Record | null,
-      date: string | null,
-      toDo: string | null,
-      tag: string | null,
-      id: string | null
-    ) {
-      if (record) {
-        this._date = record._date;
-        this._toDo = record._toDo;
-        this._tag = record._tag;
-        this._id = record._id;
-        this._status = record._status;
-      } else {
-        this._date = date as string;
-        this._toDo = toDo as string;
-        this._tag = tag as string;
-        this._id = id as string;
-        this._status = "new";
+  export enum Tags {
+    IMPORTANT = "#important",
+    VERY_IMPORTANT = "#very important",
+    NOT_IMPORTANT = "#not important",
+  }
+
+  export enum Dbs {
+    LOCALSTORAGE = 0,
+    //another db
+  }
+  /* eslint-disable @typescript-eslint/no-explicit-any*/
+  type T = { [index: string]: any };
+
+  export class Record
+    implements
+      AbstractCalendarClasses.AbstractRecord,
+      AbstractCalendarClasses.AbstractInputRecord
+  {
+    /*private*/ _id = "";
+    /*private*/ _date = "";
+    /*private*/ _toDo = "";
+    /*private*/ _tag = "";
+    /*private*/ _status = "";
+
+    constructor(record: Partial<AbstractCalendarClasses.AbstractInputRecord>) {
+      record._status ??= CalendarClasses.Statuses.NEW;
+      for (const key in record) {
+        (this as T)[key] = (record as T)[key];
       }
     }
 
     public isNeeded(property: string) {
-      switch (property) {
-        case this._date:
-        case this._toDo:
-        case this._tag:
-        case this._status: {
+      for (const key in this) {
+        if ((this as T)[key] === property) {
           return true;
         }
       }
@@ -43,16 +49,11 @@ export namespace CalendarClasses {
     }
 
     public change(
-      date: string | null,
-      toDo: string | null,
-      tag: string | null,
-      status: string | null
+      record: Partial<AbstractCalendarClasses.AbstractInputRecord>
     ) {
-      this._date = date ? date : this._date;
-      this._toDo = toDo ? toDo : this._toDo;
-      this._tag = tag ? tag : this._tag;
-      this._status = status ? status : this._status;
-
+      for (const key in record) {
+        (this as T)[key] = (record as T)[key];
+      }
       return this;
     }
 
@@ -65,7 +66,9 @@ export namespace CalendarClasses {
     }
 
     set date(newDate: string) {
-      this._date = newDate;
+      if (typeof newDate === "string") {
+        this._date = newDate;
+      }
     }
 
     get toDo() {
@@ -73,7 +76,9 @@ export namespace CalendarClasses {
     }
 
     set toDo(newToDo: string) {
-      this._toDo = newToDo;
+      if (typeof newToDo === "string") {
+        this._toDo = newToDo;
+      }
     }
 
     get tag() {
@@ -81,7 +86,9 @@ export namespace CalendarClasses {
     }
 
     set tag(newTag: string) {
-      this._tag = newTag;
+      if (typeof newTag === "string") {
+        this._tag = newTag;
+      }
     }
 
     get status() {
@@ -89,7 +96,9 @@ export namespace CalendarClasses {
     }
 
     set status(newStatus: string) {
-      this._status = newStatus;
+      if (typeof newStatus === "string") {
+        this._status = newStatus;
+      }
     }
   }
 
@@ -101,16 +110,11 @@ export namespace CalendarClasses {
     private _tag: string | null;
     private _status: string | null;
 
-    constructor(
-      date: string | null,
-      toDo: string | null,
-      tag: string | null,
-      status: string | null
-    ) {
-      this._date = date;
-      this._toDo = toDo;
-      this._tag = tag;
-      this._status = status;
+    constructor(record: Partial<AbstractCalendarClasses.AbstractInputRecord>) {
+      this._date = this._toDo = this._tag = this._status = null;
+      for (const key in record) {
+        (this as T)[key] = (record as T)[key];
+      }
     }
 
     public isEqual(record: Record) {
@@ -135,139 +139,97 @@ export namespace CalendarClasses {
   export class Calendar implements AbstractCalendarClasses.AbstractCalendar {
     private _maxId: number;
     private _localRecords: { [index: string]: Record };
+    private _name: string;
+    private _isAsync: boolean;
 
-    private _readOne(id: string) {
-      const op = new Promise<Record | null>((resolve) => {
-        const ls = window.localStorage;
-        let record;
+    constructor(name: string, db?: string) {
+      this._name = name;
+      this._maxId = Number(window.localStorage.getItem(`maxId_${this._name}`));
+      if (isNaN(this._maxId)) {
+        this._maxId = 0;
+        window.localStorage.setItem(`maxId_${this._name}`, "0");
+      }
+      this._localRecords = {};
+      this._isAsync = Boolean(db);
+    }
 
+    private async _readOne(id: string) {
+      let record: Record | null = null;
+      if (this._isAsync) {
+        //await async operation
+      } else {
         if (this._localRecords[id]) {
           record = this._localRecords[id];
         } else {
-          const str = ls.getItem(id);
+          const str = window.localStorage.getItem(id);
           if (str) {
-            record = new Record(JSON.parse(str), null, null, null, null);
+            record = new Record(JSON.parse(str));
             this._localRecords[id] = record;
           }
         }
-        resolve(record ? record : null);
-      });
-
-      op.then((data) => {
-        return data;
-      });
-
-      return op;
+      }
+      return record;
     }
 
-    private _writeOne(record: Record) {
-      const op = new Promise<Record>((resolve) => {
-        const ls = window.localStorage;
+    private async _writeOne(record: Record) {
+      if (this._isAsync) {
+        //await async operation
+      } else {
         const id = record.id;
-        if (!ls.getItem(id)) {
-          ls.setItem("maxId", String(this._maxId + 1));
+        if (!window.localStorage.getItem(id)) {
+          window.localStorage.setItem(
+            `maxId_${this._name}`,
+            String(this._maxId)
+          );
         }
 
         this._localRecords[id] = record;
-        ls.setItem(id, JSON.stringify(record));
-        resolve(record);
-      });
-
-      op.then((data) => {
-        return data;
-      });
-
-      return op;
-    }
-
-    constructor() {
-      const ls = window.localStorage;
-      this._maxId = Number(ls.getItem("maxId"));
-      if (isNaN(this._maxId)) {
-        this._maxId = 0;
-        ls.setItem("maxId", "0");
+        window.localStorage.setItem(id, JSON.stringify(record));
       }
-      this._localRecords = {};
+      return record;
     }
 
-    public create(toDo: string, tag?: string, date?: string) {
-      const op = new Promise<Record>(async (resolve) => {
-        const day = date ? date : new Date().toLocaleDateString();
-        !tag && (tag = "");
-
-        resolve(
-          await this._writeOne(
-            new Record(null, day, toDo, tag, String(this._maxId))
-          )
-        );
-        this._maxId++;
-      });
-
-      op.then((data) => {
-        return data;
-      });
-
-      return op;
+    public async create(toDo: string, tag?: string, date?: string) {
+      const day = date ? date : new Date().toLocaleDateString();
+      tag ??= "";
+      //this._maxId++;
+      return await this._writeOne(
+        new Record({
+          _date: day,
+          _toDo: toDo,
+          _tag: tag,
+          _id: `${this._maxId++}_${this._name}`,
+        })
+      );
     }
 
-    public read(property: string) {
-      const op = new Promise<Record[] | null>(async (resolve) => {
-        const rslt: Record[] = [];
-        const maxId = this._maxId;
+    public async read(property: string) {
+      const rslt: Record[] = [];
+      const maxId = this._maxId;
 
-        for (let i = 0; i < maxId; i++) {
-          const record = await this._readOne(String(i));
-          record && record.isNeeded(property) && rslt.push(record);
-        }
+      for (let i = 0; i < maxId; i++) {
+        const record = await this._readOne(`${i}_${this._name}`);
+        record && record.isNeeded(property) && rslt.push(record);
+      }
 
-        resolve(rslt.length ? rslt : null);
-      });
-
-      op.then((data) => {
-        return data;
-      });
-
-      return op;
+      return rslt.length ? rslt : null;
     }
 
-    public update(
+    public async update(
       id: string,
-      date: string | null,
-      toDo: string | null,
-      tag: string | null,
-      status: string | null
+      newRecord: Partial<AbstractCalendarClasses.AbstractInputRecord>
     ) {
-      const op = new Promise<Record | null>(async (resolve) => {
-        const record = await this._readOne(String(id));
-        resolve(
-          record
-            ? await this._writeOne(record.change(date, toDo, tag, status))
-            : null
-        );
-      });
-
-      op.then((data) => {
-        return data;
-      });
-
-      return op;
+      const record = await this._readOne(String(id));
+      return record ? await this._writeOne(record.change(newRecord)) : null;
     }
 
-    public delete(id: string) {
-      const op = new Promise<Record | null>(async (resolve) => {
-        const record = await this._readOne(String(id));
-        resolve(
-          record
-            ? await this._writeOne(record.change(null, null, null, "deleted"))
-            : null
-        );
-      });
-
-      op.then((data) => {
-        return data;
-      });
-
-      return op;
+    public async delete(id: string) {
+      const record = await this._readOne(String(id));
+      return record
+        ? await this._writeOne(
+            record.change({ _status: CalendarClasses.Statuses.DELETED })
+          )
+        : null;
     }
 
     public static filter(
@@ -280,19 +242,18 @@ export namespace CalendarClasses {
       });
     }
 
-    public clear() {
-      const op = new Promise<boolean>((resolve) => {
-        this._maxId = 0;
-        window.localStorage.clear();
-        this._localRecords = {};
-        resolve(true);
-      });
-
-      op.then((data) => {
-        return data;
-      });
-
-      return op;
+    public async clear() {
+      if (this._isAsync) {
+        //await async operation
+      } else {
+        for (let i = 0; i < this._maxId; i++) {
+          window.localStorage.removeItem(`${i}_${this._name}`);
+        }
+        window.localStorage.removeItem(`maxId_${this._name}`);
+      }
+      this._maxId = 0;
+      this._localRecords = {};
+      return true;
     }
   }
 }
