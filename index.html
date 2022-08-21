@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redux implementation</title>
+  </head>
+  <body>
+    <section>
+      <p>Edit vendor: <input type="text" id="#vendorInput" /></p>
+      <p>Edit model: <input type="text" id="#modelInput" /></p>
+      <p><label id="#modelView">Model: ---</label></p>
+      <p><label id="#vendorView">Vendor: ---</label></p>
+      <p>
+        Action and state logs provided by middleware functions:<br /><textarea
+          cols="80"
+          rows="25"
+          id="#logs"
+        ></textarea>
+      </p>
+    </section>
+  </body>
+  <script src="src/bundle.ts"></script>
+</html>
