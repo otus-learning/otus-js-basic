@@ -117,383 +117,211 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"src/Calendar.ts":[function(require,module,exports) {
+})({"src/Store.ts":[function(require,module,exports) {
 "use strict";
-
-var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CalendarClasses = void 0;
-var CalendarClasses;
+exports.applyMiddleware = exports.actionCreate = exports.combineReducers = exports.Store = void 0;
 
-(function (CalendarClasses) {
-  let Statuses;
-
-  (function (Statuses) {
-    Statuses["NEW"] = "new";
-    Statuses["DELETED"] = "deleted";
-    Statuses["PENDING"] = "pending";
-    Statuses["CLOSED"] = "closed";
-  })(Statuses = CalendarClasses.Statuses || (CalendarClasses.Statuses = {}));
-
-  let Tags;
-
-  (function (Tags) {
-    Tags["IMPORTANT"] = "#important";
-    Tags["VERY_IMPORTANT"] = "#very important";
-    Tags["NOT_IMPORTANT"] = "#not important";
-  })(Tags = CalendarClasses.Tags || (CalendarClasses.Tags = {}));
-
-  let Dbs;
-
-  (function (Dbs) {
-    Dbs[Dbs["LOCALSTORAGE"] = 0] = "LOCALSTORAGE"; //another db
-  })(Dbs = CalendarClasses.Dbs || (CalendarClasses.Dbs = {}));
-
-  class Record {
-    constructor(record) {
-      var _a;
-      /*private*/
-
-
-      this._id = "";
-      /*private*/
-
-      this._date = "";
-      /*private*/
-
-      this._toDo = "";
-      /*private*/
-
-      this._tag = "";
-      /*private*/
-
-      this._status = "";
-      (_a = record._status) !== null && _a !== void 0 ? _a : record._status = CalendarClasses.Statuses.NEW;
-
-      for (const key in record) {
-        this[key] = record[key];
-      }
-    }
-
-    isNeeded(property) {
-      for (const key in this) {
-        if (this[key] === property) {
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-    change(record) {
-      for (const key in record) {
-        this[key] = record[key];
-      }
-
-      return this;
-    }
-
-    get id() {
-      return this._id;
-    }
-
-    get date() {
-      return this._date;
-    }
-
-    set date(newDate) {
-      if (typeof newDate === "string") {
-        this._date = newDate;
-      }
-    }
-
-    get toDo() {
-      return this._toDo;
-    }
-
-    set toDo(newToDo) {
-      if (typeof newToDo === "string") {
-        this._toDo = newToDo;
-      }
-    }
-
-    get tag() {
-      return this._tag;
-    }
-
-    set tag(newTag) {
-      if (typeof newTag === "string") {
-        this._tag = newTag;
-      }
-    }
-
-    get status() {
-      return this._status;
-    }
-
-    set status(newStatus) {
-      if (typeof newStatus === "string") {
-        this._status = newStatus;
-      }
-    }
-
+class Store {
+  constructor(reducer, initialState, createDispatch) {
+    this._state = initialState ? Object.assign({}, initialState) : {};
+    this._reducer = reducer;
+    this._callbacks = [];
+    this._middlewares = [];
+    createDispatch && (this.dispatch = createDispatch(this));
   }
 
-  CalendarClasses.Record = Record;
-
-  class SortCondition {
-    constructor(record) {
-      this._date = this._toDo = this._tag = this._status = null;
-
-      for (const key in record) {
-        this[key] = record[key];
-      }
-    }
-
-    isEqual(record) {
-      return record.date === this._date || record.toDo === this._toDo || record.tag === this._tag || record.status === this._status;
-    }
-
-    isNotEqual(record) {
-      return record.date !== this._date && record.toDo !== this._toDo && record.tag !== this._tag && record.status !== this._status;
-    }
-
+  getState() {
+    return this._state;
   }
 
-  CalendarClasses.SortCondition = SortCondition;
+  dispatch(action) {
+    this._state = this._reducer(this._state, action);
 
-  class Calendar {
-    constructor(name, db) {
-      this._name = name;
-      this._maxId = Number(window.localStorage.getItem("maxId_".concat(this._name)));
-
-      if (isNaN(this._maxId)) {
-        this._maxId = 0;
-        window.localStorage.setItem("maxId_".concat(this._name), "0");
-      }
-
-      this._localRecords = {};
-      this._isAsync = Boolean(db);
-    }
-
-    _readOne(id) {
-      return __awaiter(this, void 0, void 0, function* () {
-        let record = null;
-
-        if (this._isAsync) {//await async operation
-        } else {
-          if (this._localRecords[id]) {
-            record = this._localRecords[id];
-          } else {
-            const str = window.localStorage.getItem(id);
-
-            if (str) {
-              record = new Record(JSON.parse(str));
-              this._localRecords[id] = record;
-            }
-          }
-        }
-
-        return record;
-      });
-    }
-
-    _writeOne(record) {
-      return __awaiter(this, void 0, void 0, function* () {
-        if (this._isAsync) {//await async operation
-        } else {
-          const id = record.id;
-
-          if (!window.localStorage.getItem(id)) {
-            window.localStorage.setItem("maxId_".concat(this._name), String(this._maxId));
-          }
-
-          this._localRecords[id] = record;
-          window.localStorage.setItem(id, JSON.stringify(record));
-        }
-
-        return record;
-      });
-    }
-
-    create(toDo, tag, date) {
-      return __awaiter(this, void 0, void 0, function* () {
-        const day = date ? date : new Date().toLocaleDateString();
-        tag !== null && tag !== void 0 ? tag : tag = ""; //this._maxId++;
-
-        return yield this._writeOne(new Record({
-          _date: day,
-          _toDo: toDo,
-          _tag: tag,
-          _id: "".concat(this._maxId++, "_").concat(this._name)
-        }));
-      });
-    }
-
-    read(property) {
-      return __awaiter(this, void 0, void 0, function* () {
-        const rslt = [];
-        const maxId = this._maxId;
-
-        for (let i = 0; i < maxId; i++) {
-          const record = yield this._readOne("".concat(i, "_").concat(this._name));
-          record && record.isNeeded(property) && rslt.push(record);
-        }
-
-        return rslt.length ? rslt : null;
-      });
-    }
-
-    update(id, newRecord) {
-      return __awaiter(this, void 0, void 0, function* () {
-        const record = yield this._readOne(String(id));
-        return record ? yield this._writeOne(record.change(newRecord)) : null;
-      });
-    }
-
-    delete(id) {
-      return __awaiter(this, void 0, void 0, function* () {
-        const record = yield this._readOne(String(id));
-        return record ? yield this._writeOne(record.change({
-          _status: CalendarClasses.Statuses.DELETED
-        })) : null;
-      });
-    }
-
-    static filter(records, cfgObjEq, cfgObjNEq) {
-      return records.filter(el => {
-        return cfgObjEq.isEqual(el) && cfgObjNEq.isNotEqual(el);
-      });
-    }
-
-    clear() {
-      return __awaiter(this, void 0, void 0, function* () {
-        if (this._isAsync) {//await async operation
-        } else {
-          for (let i = 0; i < this._maxId; i++) {
-            window.localStorage.removeItem("".concat(i, "_").concat(this._name));
-          }
-
-          window.localStorage.removeItem("maxId_".concat(this._name));
-        }
-
-        this._maxId = 0;
-        this._localRecords = {};
-        return true;
-      });
-    }
-
+    this._callbacks.forEach(func => {
+      func();
+    });
   }
 
-  CalendarClasses.Calendar = Calendar;
-})(CalendarClasses = exports.CalendarClasses || (exports.CalendarClasses = {}));
+  subscribe(cb) {
+    this._callbacks.push(cb);
+
+    return () => {
+      this._callbacks = this._callbacks.filter(func => {
+        return func !== cb;
+      });
+    };
+  }
+
+  replaceReducer(newReducer) {
+    this._reducer = newReducer;
+  }
+
+}
+
+exports.Store = Store;
+
+function combineReducers(reducers) {
+  //return single combined reducer
+  return function () {
+    let inputState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    let action = arguments.length > 1 ? arguments[1] : undefined;
+    const state = Object.assign({}, inputState);
+
+    for (const key in reducers) {
+      const reducer = reducers[key];
+      state[key] = reducer(state[key] && state, action)[key];
+    }
+
+    return state;
+  };
+}
+
+exports.combineReducers = combineReducers;
+
+function actionCreate(actionType, // eslint-disable-next-line @typescript-eslint/no-explicit-any
+actionPayload) {
+  return {
+    type: actionType,
+    payload: actionPayload
+  };
+}
+
+exports.actionCreate = actionCreate;
+
+function applyMiddleware() {
+  for (var _len = arguments.length, middlewares = new Array(_len), _key = 0; _key < _len; _key++) {
+    middlewares[_key] = arguments[_key];
+  }
+
+  middlewares.reverse();
+  return store => {
+    let dispatch = store.dispatch.bind(store);
+    middlewares.forEach(middleware => {
+      dispatch = middleware(store)(dispatch);
+    });
+    return dispatch;
+  };
+}
+
+exports.applyMiddleware = applyMiddleware;
 },{}],"src/bundle.ts":[function(require,module,exports) {
 "use strict";
 
-var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-const Calendar_1 = require("./Calendar");
+const Store_1 = require("./Store");
 
-(() => __awaiter(void 0, void 0, void 0, function* () {
-  const calendar = new Calendar_1.CalendarClasses.Calendar("first");
-  const calendar_ = new Calendar_1.CalendarClasses.Calendar("Second");
-  yield calendar.clear();
-  yield calendar_.clear();
-  console.log("Tasks for first calendar:");
-  console.log(yield calendar.create("Задача номер один", Calendar_1.CalendarClasses.Tags.IMPORTANT));
-  console.log(yield calendar.create("Задача номер два", Calendar_1.CalendarClasses.Tags.IMPORTANT));
-  console.log(yield calendar.create("Задача номер три", Calendar_1.CalendarClasses.Tags.NOT_IMPORTANT, "2022.12.31"));
-  console.log("Tasks for second calendar:");
-  console.log(yield calendar_.create("Задача второго календаря", Calendar_1.CalendarClasses.Tags.NOT_IMPORTANT));
-  let records = yield calendar.read(Calendar_1.CalendarClasses.Tags.IMPORTANT);
-  console.log("All records selected by certain tag at the first calendar: ", records);
+var actions;
 
-  if (records) {
-    const filteredRecords = Calendar_1.CalendarClasses.Calendar.filter(records, new Calendar_1.CalendarClasses.SortCondition({
-      _toDo: "Задача номер один"
-    }), new Calendar_1.CalendarClasses.SortCondition({}));
-    console.log("All filtered records: ", filteredRecords);
-    filteredRecords[0] && calendar.update(filteredRecords[0].id, {
-      _toDo: "Очень важная задача №1",
-      _status: Calendar_1.CalendarClasses.Statuses.PENDING
-    });
-  }
+(function (actions) {
+  actions["CHANGE_MODEL"] = "changeModel";
+  actions["CHANGE_VENDOR"] = "changeVendor";
+})(actions || (actions = {}));
 
-  const updatedRecords = yield calendar.read(Calendar_1.CalendarClasses.Tags.IMPORTANT);
-  console.log("Records with one, whos field has been updated at the first calendar: ", updatedRecords);
-  yield calendar.clear();
-  console.log("Now the first calendar is clear");
-  records = yield calendar_.read(Calendar_1.CalendarClasses.Tags.NOT_IMPORTANT);
-  console.log("All records selected by certain tag at the second calendar: ", records);
-}))();
-},{"./Calendar":"src/Calendar.ts"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+(() => {
+  const reducer = (0, Store_1.combineReducers)({
+    model: (inputState, action) => {
+      switch (action.type) {
+        case actions.CHANGE_MODEL:
+          {
+            if (inputState) {
+              inputState.model = action.payload;
+            } else {
+              inputState = {
+                model: action.payload
+              };
+            }
+
+            break;
+          }
+      }
+
+      return inputState || {};
+    },
+    vendor: (inputState, action) => {
+      switch (action.type) {
+        case actions.CHANGE_VENDOR:
+          {
+            if (inputState) {
+              inputState.vendor = action.payload;
+            } else {
+              inputState = {
+                vendor: action.payload
+              };
+            }
+
+            break;
+          }
+      }
+
+      return inputState || {};
+    }
+  });
+
+  const callbackModel = () => {
+    document.getElementById("#modelView").innerText = "Model: ".concat(store.getState().model);
+  };
+
+  const callbackVendor = () => {
+    document.getElementById("#vendorView").innerText = "Vendor: ".concat(store.getState().vendor);
+  };
+
+  const middlewareLogActions = store => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return next => {
+      return action => {
+        const rslt = next(action);
+        document.getElementById("#logs").value += "Action = {type = ".concat(action.type, ", payload = ").concat(action.payload, "}\n");
+        return rslt;
+      };
+    };
+  };
+
+  const middlewareLogStates = store => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return next => {
+      return action => {
+        const rslt = next(action);
+        document.getElementById("#logs").value += "Store.state = {model : ".concat(store.getState().model, ", vendor : ").concat(store.getState().vendor, "}\n\n");
+        return rslt;
+      };
+    };
+  };
+
+  const store = new Store_1.Store(reducer, {
+    model: "Atom",
+    vendor: "Intel"
+  }, (0, Store_1.applyMiddleware)(middlewareLogStates, middlewareLogActions));
+  store.subscribe(callbackModel);
+  store.subscribe(callbackVendor);
+  const modelEl = document.getElementById("#modelInput");
+  modelEl.addEventListener("keypress", e => {
+    const el = e.target;
+    const code = e.code;
+
+    if (code === "Enter") {
+      const action = (0, Store_1.actionCreate)(actions.CHANGE_MODEL, el.value);
+      store.dispatch(action);
+    }
+  });
+  const vendorEl = document.getElementById("#vendorInput");
+  vendorEl.addEventListener("keypress", e => {
+    const el = e.target;
+    const code = e.code;
+
+    if (code === "Enter") {
+      const action = (0, Store_1.actionCreate)(actions.CHANGE_VENDOR, el.value);
+      store.dispatch(action);
+    }
+  });
+})();
+},{"./Store":"src/Store.ts"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -521,7 +349,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44577" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41915" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
