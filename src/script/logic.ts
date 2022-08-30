@@ -67,7 +67,7 @@ store.subscribe(() => {
       div.innerHTML = `&#${img.alt}`;
       msg.message = (msg.message as string)
         .split(div.innerHTML)
-        .join(`\u0000${index}\u0000`);
+        .join(`\u0000::${index}::\u0000`);
     });
 
     div.innerHTML = "";
@@ -87,8 +87,9 @@ store.subscribe(() => {
     div.appendChild(p);
 
     (msg.message as string).split("\u0000").forEach((el, index) => {
-      if ((el as string).match(/^[0-9]+$/)) {
+      if ((el as string).match(/^::[0-9]+::$/)) {
         const img = document.createElement("img");
+        el = el.split("::").join("");
         img.src = imgs[Number(el)].src;
         img.classList.add("message-container__smile");
         div.appendChild(img);
