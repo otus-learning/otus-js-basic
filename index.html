@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat</title>
+  </head>
+  <body>
+    <section id="#app" class="main-container">
+      <div class="main-container__name-container name-container">
+        <label class="name-container__label">Отображаемое имя: </label>
+        <input
+          class="name-container__input"
+          id="#name-input"
+          type="text"
+          value="me"
+        />
+      </div>
+      <div
+        class="main-container__message-window message-window"
+        id="#message-window"
+      ></div>
+      <div
+        contenteditable="true"
+        class="main-container__send-input"
+        id="#send-input"
+      ></div>
+      <button id="#button-send" class="main-container__send-button">
+        Send
+      </button>
+      <div class="main-container__smiles-area smiles-area" id="#smiles-area">
+        <img src="src/img/128512.gif" alt="128512" class="smiles-area__gif" />
+        <img src="src/img/128521.gif" alt="128521" class="smiles-area__gif" />
+        <img src="src/img/129315.gif" alt="129315" class="smiles-area__gif" />
+        <img src="src/img/128532.gif" alt="128532" class="smiles-area__gif" />
+        <img src="src/img/128530.gif" alt="128530" class="smiles-area__gif" />
+        <img src="src/img/128556.gif" alt="128556" class="smiles-area__gif" />
+        <img src="src/img/128557.gif" alt="128557" class="smiles-area__gif" />
+        <img src="src/img/128563.gif" alt="128563" class="smiles-area__gif" />
+        <img src="src/img/129314.gif" alt="129314" class="smiles-area__gif" />
+        <img src="src/img/129392.gif" alt="129392" class="smiles-area__gif" />
+        <img src="src/img/129395.gif" alt="129395" class="smiles-area__gif" />
+        <img src="src/img/129322.gif" alt="129322" class="smiles-area__gif" />
+        <img src="src/img/127866.gif" alt="127866" class="smiles-area__gif" />
+      </div>
+      <img
+        src="src/img/sandclock.png"
+        alt="Sand clock"
+        class="main-container__clock-img main-container__clock-img--showed"
+        id="#sand-clock"
+      />
+    </section>
+  </body>
+  <script src="src/script/bundle.ts"></script>
+</html>
