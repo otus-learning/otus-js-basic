@@ -90,24 +90,36 @@ export const startVisualisation = (syncAsync: number) => {
     });
 
   router.on(
-    new RegExp("^/[a-zA-z]+[0-9]*$"),
+    new RegExp("^/otus-learning/[a-zA-z]+[0-9]*$"),
     hooksCreator("onBeforeEnter()", syncAsync),
     hooksCreator("onEnter()", syncAsync),
     hooksCreator("onLeave()", syncAsync),
     renderCreator("log-container__text")
   );
   router.on(
-    () => "/links/Link7",
+    () => "/otus-learning/links/Link7",
     hooksCreator("onBeforeEnter()", syncAsync),
     hooksCreator("onEnter()", syncAsync),
     hooksCreator("onLeave()", syncAsync),
     renderCreator("log-container__text--dotted")
   );
   router.on(
-    "/",
+    "/otus-learning/",
     hooksCreator("onBeforeEnter()", syncAsync),
     hooksCreator("onEnter()", syncAsync),
     hooksCreator("onLeave()", syncAsync),
     renderCreator("log-container__text--bordered")
   );
+
+  document.body.onload = () => {
+    const bgColor = getRandomColor();
+    const nextPath = location.href.replace(location.origin, "");
+    router.go(
+      nextPath,
+      [nextPath, bgColor],
+      [nextPath, bgColor],
+      [nextPath, bgColor],
+      ["reloaded page", bgColor]
+    );
+  };
 };

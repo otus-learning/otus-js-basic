@@ -39,7 +39,7 @@ describe("test router visualisation routins", () => {
 
   it("tests that UI elements do all the things realy right", async () => {
     document.body.innerHTML =
-      "<a href='/link1'>Link 1</a><div id='logs'></div>";
+      "<a href='/otus-learning/link1'>Link 1</a><div id='logs'></div>";
     startVisualisation(1);
 
     (document.querySelector("a") as HTMLAnchorElement).dispatchEvent(
@@ -67,5 +67,12 @@ describe("test router visualisation routins", () => {
     expect(document.body.innerHTML.match("Rendering")).not.toEqual(null);
     expect(document.body.innerHTML.match("FORWARD")).not.toEqual(null);
     expect(document.body.innerHTML.match("BACK")).not.toEqual(null);
+
+    document.body.onload && document.body.onload(new Event("load"));
+    await new Promise((resolve) => {
+      setTimeout(() => resolve("test"), 10);
+    });
+
+    expect(document.body.innerHTML.match("reloaded page")).not.toEqual(null);
   });
 });
