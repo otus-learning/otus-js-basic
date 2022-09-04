@@ -90,14 +90,14 @@ export const startVisualisation = (syncAsync: number) => {
     });
 
   router.on(
-    new RegExp("^/otus-learning/[a-zA-z]+[0-9]*$"),
+    new RegExp("^/otus-learning/[a-zA-z]+[0-9]+$"),
     hooksCreator("onBeforeEnter()", syncAsync),
     hooksCreator("onEnter()", syncAsync),
     hooksCreator("onLeave()", syncAsync),
     renderCreator("log-container__text")
   );
   router.on(
-    () => "/otus-learning/links/Link7",
+    () => "/otus-learning/_link_",
     hooksCreator("onBeforeEnter()", syncAsync),
     hooksCreator("onEnter()", syncAsync),
     hooksCreator("onLeave()", syncAsync),
