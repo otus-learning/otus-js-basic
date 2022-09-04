@@ -7,4 +7,4 @@ parcelRequire=function(e,r,t,n){var i,o="function"==typeof parcelRequire&&parcel
 },{"./router":"NewY"}],"pqk3":[function(require,module,exports) {
 "use strict";Object.defineProperty(exports,"__esModule",{value:!0}),require("../scss/reset.scss"),require("../scss/style.scss");const s=require("./routerVisualisation");(0,s.startVisualisation)(.5);
 },{"../scss/reset.scss":"LEjR","../scss/style.scss":"LEjR","./routerVisualisation":"rNk5"}]},{},["pqk3"], null)
-//# sourceMappingURL=bundle.596f1287.js.map
+//# sourceMappingURL=otus-learning/bundle.596f1287.js.map
