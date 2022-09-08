@@ -63,7 +63,7 @@ export const calendarGUI = (
         const miniSearch = new MSearch({ fields: ["_toDo", "_tag"] });
         miniSearch.addAll(filteredByDate);
         searched = miniSearch
-          .search(toDo, { prefix: true })
+          .search(toDo, { prefix: true, fuzzy: 0.2 })
           .sort((a: Record<string, any>, b: Record<string, any>) => {
             return b.score - a.score;
           });
