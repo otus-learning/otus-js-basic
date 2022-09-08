@@ -1,0 +1,184 @@
+$width-global: 900px;
+$width-del-val: 175px;
+
+.main-container {
+  display: block;
+  width: $width-global;
+
+  &__navigation-container {
+    width: $width-global;
+  }
+
+  &__record-container {
+    width: $width-global;
+  }
+
+  &__search-container {
+    width: $width-global;
+  }
+
+  &__about-container {
+    width: $width-global;
+  }
+}
+
+.navigation-container {
+  position: absolute;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  &__nav-button {
+    width: 100px;
+    align-self: center;
+  }
+
+  &__hr {
+    margin: 1rem auto;
+    width: $width-global;
+  }
+}
+
+.record-container {
+  position: absolute;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  top: 85px;
+
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: left;
+  width: $width-global - $width-del-val;
+
+  &--unvisible {
+    display: none;
+  }
+
+  &__date-field {
+    width: 200px;
+  }
+
+  &__todo-field {
+    width: 700px;
+    height: 100px;
+    resize: none;
+  }
+
+  &__tag-field {
+    width: 300px;
+  }
+
+  &__btns-container {
+  }
+}
+
+.btns-container {
+  &__save-btn {
+    margin-top: 1rem;
+    width: 100px;
+  }
+
+  &__del-btn {
+    display: inline-block;
+    margin-top: 1rem;
+    width: 100px;
+
+    &--unvisible {
+      display: none;
+    }
+  }
+
+  &__lbl-closed {
+    display: inline-block;
+    &--unvisible {
+      display: none;
+    }
+  }
+
+  &__cbx-closed {
+    display: inline-block;
+    &--unvisible {
+      display: none;
+    }
+  }
+}
+
+.search-container {
+  position: absolute;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  top: 85px;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: $width-global;
+
+  &--unvisible {
+    display: none;
+  }
+
+  &__cbx-search-closed {
+    margin-right: 20px;
+  }
+
+  &__search-field {
+    margin-right: 20px;
+    width: 380px;
+    align-self: center;
+  }
+
+  &__date-field {
+    width: 175px;
+    align-self: center;
+  }
+
+  &__search-results {
+    border: solid black 1px;
+    width: $width-global - $width-del-val;
+    overflow: auto;
+    height: 700px;
+    align-self: center;
+  }
+}
+
+.search-results-container {
+  display: block;
+
+  &--unvisible {
+    display: none;
+  }
+
+  &__record {
+    color: blue;
+    display: block;
+
+    &:hover {
+      color: navy;
+    }
+  }
+}
+
+.about-container {
+  position: absolute;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  top: 85px;
+
+  display: block;
+  text-align: center;
+
+  &--unvisible {
+    display: none;
+  }
+}
