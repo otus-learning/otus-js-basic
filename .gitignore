@@ -1,1 +1,7 @@
 node_modules
+coverage
+dev
+public
+dev
+public
+storybook-static
