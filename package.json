@@ -1,40 +1,39 @@
 {
-  "name": "otus-learning",
+  "name": "nodejs-console-app",
   "version": "1.0.0",
-  "description": "otus JS-Basic learning account",
-  "main": "index.js",
+  "description": "Console application for publishing NodeJS projects",
+  "main": "index.ts",
   "scripts": {
-    "test": "jest",
+    "test": "jest --silent=false --coverage",
     "lint": "prettier --check . && eslint .",
     "lint-fix": "prettier --write . && eslint . --fix",
-    "prepare": "husky install"
+    "start": "ts-node index.ts -a"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/otus-learning/otus-learning.git"
-  },
+  "keywords": [
+    "publishing",
+    "console",
+    "NodeJS"
+  ],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/otus-learning/otus-learning/issues"
+  "dependencies": {
+    "gh-pages": "^4.0.0"
   },
-  "homepage": "https://github.com/otus-learning/otus-learning#readme",
   "devDependencies": {
-    "@babel/core": "^7.17.12",
-    "@babel/preset-env": "^7.17.12",
-    "@types/jest": "^27.5.1",
-    "babel-jest": "^28.1.0",
-    "eslint": "^8.15.0",
+    "@types/gh-pages": "^3.2.1",
+    "@types/jest": "^29.0.3",
+    "@typescript-eslint/eslint-plugin": "^5.38.1",
+    "@typescript-eslint/parser": "^5.38.1",
+    "eslint": "^8.24.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-jest": "^26.2.2",
-    "husky": "^8.0.1",
-    "jest": "^28.1.0",
-    "jest-environment-jsdom": "^28.1.0",
-    "lint-staged": "^12.4.1",
-    "prettier": "2.6.2"
-  },
-  "lint-staged": {
-    "*.js": "eslint --fix",
-    "*.{js,css,md}": "prettier --write"
+    "eslint-plugin-jest": "^27.0.4",
+    "i": "^0.3.7",
+    "jest": "^29.0.3",
+    "jest-environment-jsdom": "^29.1.2",
+    "lint-staged": "^13.0.3",
+    "npm": "^8.19.2",
+    "prettier": "^2.7.1",
+    "ts-jest": "^29.0.2",
+    "typescript": "^4.8.4"
   }
 }
